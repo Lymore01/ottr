@@ -5,7 +5,7 @@ defmodule OttrTest do
 
   setup do
     # Ensure a clean state for each test
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(QueueRepo)
+    # :ok = Ecto.Adapters.SQL.Sandbox.checkout(OttrRepo)
     Ottr.create_queue(@queue)
     :ok
   end
@@ -39,6 +39,7 @@ defmodule OttrTest do
 
   test "task retry and failure after retry limit" do
     :ok = Ottr.insert(@queue, "fail_me")
+    # fetch the latest task added to the queue, with status in_progress
     task = Ottr.fetch_task(@queue)
 
     OttrRepo.Tasks.update_task(OttrRepo.Tasks.get_task!(task.id), %{
@@ -50,6 +51,12 @@ defmodule OttrTest do
 
     db_task = OttrRepo.Tasks.get_task!(task.id)
     assert db_task.status == "failed"
+
+    # add task to dead letter table
+    # check if task in dead letter table
+    dead_letter_tasks = OttrRepo.DeadLetterTasks.list_dead_letters()
+
+    assert Enum.any?(dead_letter_tasks, fn t -> t.original_task_id == db_task.id end)
   end
 
   test "visibility timeout makes stuck tasks available again" do

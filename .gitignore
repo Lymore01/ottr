@@ -24,3 +24,5 @@ gen_servers-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+notes.md

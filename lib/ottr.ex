@@ -1,21 +1,232 @@
-defmodule OttrApp do
-  use Application
+defmodule Ottr do
+  use GenServer
+  require Logger
+  alias OttrRepo.Tasks
+  alias OttrRepo.Queues
+  alias OttrRepo.DeadLetterTasks, as: DeadLetterTable
 
-  def start(_type, _args) do
-    children = [
-      {Registry, keys: :unique, name: TaskQueueRegistry},
-      {DynamicSupervisor, strategy: :one_for_one, name: TaskQueueSupervisor},
-      :poolboy.child_spec(
+  # constants
+  @flush_interval_ms 60_000
+  @max_buffer_size 5
+  @retry_limit 3
+  @timeout_seconds 300
+
+  # Client APIs
+  def start_link(queue_name) do
+    GenServer.start_link(__MODULE__, queue_name, name: via_tuple(queue_name))
+  end
+
+  # dynamically start a new queue (a genserver process)
+  def create_queue(name) do
+    Queues.create_queue(name)
+    spec = {Ottr, name}
+    DynamicSupervisor.start_child(TaskQueueSupervisor, spec)
+  end
+
+  def insert(queue_name, task) when is_binary(task) do
+    attrs = %{queue: queue_name, data: %{payload: task}, status: "pending"}
+    {:ok, db_task} = Tasks.create_task(attrs)
+    GenServer.cast(via_tuple(queue_name), {:insert, %{id: db_task.id, data: task, retries: 0}})
+  end
+
+  # for re-insertion
+  def insert(queue_name, %{id: id, data: _data, retries: _retries} = task) do
+    Tasks.update_task(Tasks.get_task!(id), %{
+      retries: task.retries,
+      status: "pending"
+    })
+
+    GenServer.cast(via_tuple(queue_name), {:insert, task})
+  end
+
+  def flush(queue_name) do
+    GenServer.call(via_tuple(queue_name), :flush)
+  end
+
+  # get all tasks from a topic
+  def get_all_tasks(queue_name) do
+    GenServer.call(via_tuple(queue_name), :get_all_tasks)
+  end
+
+  def fetch_task(queue_name) do
+    GenServer.call(via_tuple(queue_name), :fetch_task)
+  end
+
+  def ack_task(queue_name, task_id) do
+    task = Tasks.get_task!(task_id)
+
+    if task.status != "in_progress" do
+      Logger.warning("Task #{task_id} is not in progress, cannot acknowledge.")
+      {:error, :task_not_in_progress}
+    else
+      Tasks.update_task(task, %{status: "acknowledged", locked_at: nil})
+      GenServer.cast(via_tuple(queue_name), {:ack_task, task_id})
+      {:ok, task}
+    end
+  end
+
+  # Server Callbacks
+  # init function - sets up the state
+  @impl true
+  def init(queue_name) do
+    Logger.info("Starting TaskQueue for #{queue_name}")
+    tasks = Tasks.list_available_tasks_for_queue(queue_name, @timeout_seconds)
+    timer = Process.send_after(self(), :tick, @flush_interval_ms)
+
+    {:ok,
+     %{queue_name: queue_name, buffer: tasks, in_progress: %{}, running_tasks: %{}, timer: timer}}
+  end
+
+  # handle_cast function - handles asynchronous messages
+  @impl true
+  def handle_cast({:insert, task}, %{buffer: buffer, timer: timer} = state) do
+    new_buffer = [task | buffer]
+    # If buffer size exceeds max, flush it
+    if length(new_buffer) >= @max_buffer_size do
+      Logger.info("Buffer full, flushing tasks...")
+      Process.cancel_timer(timer)
+      do_flush(state.queue_name, new_buffer)
+      new_timer = Process.send_after(self(), :tick, @flush_interval_ms)
+      # Reset the buffer after flushing
+      {:noreply, %{state | buffer: [], timer: new_timer}}
+    else
+      {:noreply, %{state | buffer: new_buffer}}
+    end
+  end
+
+  @impl true
+  def handle_cast({:ack_task, task_id}, %{in_progress: in_progress} = state) do
+    case Map.pop(in_progress, task_id) do
+      {nil, _} ->
+        Logger.warning("Ack received for unknown task: #{inspect(task_id)}")
+        {:noreply, state}
+
+      {_task, new_in_progress} ->
+        Logger.info("Task acknowledged: #{inspect(task_id)}")
+        {:noreply, %{state | in_progress: new_in_progress}}
+    end
+  end
+
+  @impl true
+  def handle_cast({:task_started, task_id, pid}, state) do
+    Logger.info("Task started: #{inspect(task_id)} with PID: #{inspect(pid)}")
+    new_running = Map.put(state.running_tasks, task_id, pid)
+    {:noreply, %{state | running_tasks: new_running}}
+  end
+
+  @impl true
+  def handle_cast({:task_finished, task_id}, state) do
+    Logger.info("Task finished: #{inspect(task_id)}")
+    new_running = Map.delete(state.running_tasks, task_id)
+    {:noreply, %{state | running_tasks: new_running}}
+  end
+
+  @impl true
+  def handle_call(:fetch_task, _from, %{buffer: [task | rest], in_progress: in_progress} = state) do
+    now = DateTime.utc_now()
+    Tasks.update_task(Tasks.get_task!(task.id), %{status: "in_progress", locked_at: now})
+    new_in_progress = Map.put(in_progress, task.id, task)
+    new_state = %{state | buffer: rest, in_progress: new_in_progress}
+    {:reply, task, new_state}
+  end
+
+  @impl true
+  def handle_call(:fetch_task, _from, %{buffer: [], in_progress: _in_progress} = state) do
+    {:reply, nil, state}
+  end
+
+  # handle_call function - handles synchronous requests
+  @impl true
+  def handle_call(:flush, _from, %{buffer: buffer, timer: timer} = state) do
+    Process.cancel_timer(timer)
+    do_flush(state.queue_name, buffer)
+    new_timer = Process.send_after(self(), :tick, @flush_interval_ms)
+    {:reply, :ok, %{state | buffer: [], timer: new_timer}}
+  end
+
+  # get all tasks
+  @impl true
+  def handle_call(:get_all_tasks, _from, %{buffer: buffer} = state) do
+    {:reply, buffer, state}
+  end
+
+  # handle_info function - handles periodic timer ticks
+  @impl true
+  def handle_info(:tick, %{buffer: buffer} = state) do
+    do_flush(state.queue_name, buffer)
+    new_timer = Process.send_after(self(), :tick, @flush_interval_ms)
+    {:noreply, %{state | buffer: [], timer: new_timer}}
+  end
+
+  @impl true
+  def handle_info({:retry_task, queue_name, task, via_tuple}, state) do
+    GenServer.cast(via_tuple.(queue_name), {:insert, task})
+    {:noreply, state}
+  end
+
+  # handle_info function - handles unexpected messages
+  @impl true
+  def handle_info(msg, state) do
+    Logger.warning("Received unexpected message: #{inspect(msg)}")
+    {:noreply, state}
+  end
+
+  # Private function to process the tasks in the buffer
+  @impl true
+  def terminate(_reason, %{buffer: buffer, timer: _timer} = state) do
+    Logger.info("Flushing remaining tasks before shutdown...")
+    do_flush(state.queue_name, buffer)
+    :ok
+  end
+
+  # Private Methods
+
+  # via_tuple function - creates a tuple for process lookup
+  # This allows us to use the Registry to find the process by name
+  defp via_tuple(name) do
+    {:via, Registry, {TaskQueueRegistry, name}}
+  end
+
+  defp do_flush(_queue_name, []), do: :ok
+
+  defp do_flush(queue_name, buffer) do
+    Enum.each(buffer, fn task ->
+      :poolboy.transaction(
         :task_worker_pool,
-        name: {:local, :task_worker_pool},
-        worker_module: TaskWorker,
-        size: 5,
-        max_overflow: 2
-      ),
-      OttrRepo
-    ]
+        fn pid ->
+          GenServer.cast(self(), {:task_started, task.id, pid})
 
-    opts = [strategy: :one_for_one, name: Ottr.Supervisor]
-    Supervisor.start_link(children, opts)
+          send(
+            pid,
+            {:process,
+             fn ->
+               process_task(queue_name, task)
+               GenServer.cast(via_tuple(queue_name), {:task_finished, task.id})
+             end}
+          )
+        end
+      )
+    end)
+  end
+
+  def process_task(queue_name, task) do
+    # fail = :true
+    Logger.info("Processing task concurrently: #{inspect(task.data)}")
+    :timer.sleep(100)
+
+    if :rand.uniform(10) == 1 do
+      Ottr.Retry.maybe_retry(
+        task,
+        queue_name,
+        @retry_limit,
+        &via_tuple/1,
+        Tasks,
+        DeadLetterTable
+      )
+    else
+      Logger.info("Task processed successfully: #{inspect(task.data)}")
+      fetch_task = Tasks.get_task!(task.id)
+      Tasks.update_task(fetch_task, %{status: "done", locked_at: nil})
+    end
   end
 end
