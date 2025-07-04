@@ -58,3 +58,23 @@
 
 
 Exactly-once task locking > Robust retry + dead letter queue > Crash recovery > Observability
+
+Ottr.insert("signup_queue", %{
+  data: %{
+    "type" => "workflow_runner",
+    "args" => %{
+      "workflow_id" => 1,
+      "step" => 1,
+      "context" => %{
+        "email" => "jane@example.com",
+        "user_id" => "abc123"
+      }
+    }
+  }
+})
+
+Webhook triggers
+
+Step result passing
+
+Optional: conditionals, delays, visual flow
