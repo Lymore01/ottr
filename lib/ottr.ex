@@ -6,9 +6,9 @@ defmodule Ottr do
   alias OttrRepo.DeadLetterTasks, as: DeadLetterTable
 
   # constants
-  @flush_interval_ms 60_000
+  @flush_interval_ms 30_000
   @max_buffer_size 5
-  @retry_limit 3
+  @retry_limit 4
   @timeout_seconds 300
 
   # Client APIs
@@ -18,15 +18,42 @@ defmodule Ottr do
 
   # dynamically start a new queue (a genserver process)
   def create_queue(name) do
-    Queues.create_queue(name)
-    spec = {Ottr, name}
-    DynamicSupervisor.start_child(TaskQueueSupervisor, spec)
+    case Queues.create_queue(name) do
+      {:ok, _queue} ->
+        Logger.info("Queue created: #{inspect(name)}")
+        spec = {Ottr, name}
+        DynamicSupervisor.start_child(TaskQueueSupervisor, spec)
+
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 
   def insert(queue_name, task) when is_binary(task) do
-    attrs = %{queue: queue_name, data: %{payload: task}, status: "pending"}
-    {:ok, db_task} = Tasks.create_task(attrs)
-    GenServer.cast(via_tuple(queue_name), {:insert, %{id: db_task.id, data: task, retries: 0}})
+    Logger.warning("Rejecting raw string task: #{inspect(task)} into #{inspect(queue_name)}")
+    {:error, :invalid_task_format}
+  end
+
+  def insert(queue_name, %{data: %{"type" => _type, "args" => _args}} = task) do
+    case Queues.get_queue_by_name(queue_name) do
+      nil ->
+        Logger.warning("Queue not found: #{queue_name}")
+        {:error, :queue_not_found}
+
+      _queue ->
+        attrs = %{queue: queue_name, data: task.data, status: "pending"}
+
+        case Tasks.create_task(attrs) do
+          {:ok, db_task} ->
+            GenServer.cast(
+              via_tuple(queue_name),
+              {:insert, %{id: db_task.id, data: task.data, retries: 0}}
+            )
+
+          {:error, reason} ->
+            {:error, reason}
+        end
+    end
   end
 
   # for re-insertion
@@ -48,6 +75,7 @@ defmodule Ottr do
     GenServer.call(via_tuple(queue_name), :get_all_tasks)
   end
 
+  # TODO: Remove this implementation
   def fetch_task(queue_name) do
     GenServer.call(via_tuple(queue_name), :fetch_task)
   end
@@ -108,17 +136,25 @@ defmodule Ottr do
   end
 
   @impl true
-  def handle_cast({:task_started, task_id, pid}, state) do
+  def handle_cast({:task_started, task_id, pid, ref}, state) do
     Logger.info("Task started: #{inspect(task_id)} with PID: #{inspect(pid)}")
-    new_running = Map.put(state.running_tasks, task_id, pid)
+    new_running = Map.put(state.running_tasks, task_id, {pid, ref})
     {:noreply, %{state | running_tasks: new_running}}
   end
 
   @impl true
   def handle_cast({:task_finished, task_id}, state) do
     Logger.info("Task finished: #{inspect(task_id)}")
-    new_running = Map.delete(state.running_tasks, task_id)
-    {:noreply, %{state | running_tasks: new_running}}
+
+    case Map.pop(state.running_tasks, task_id) do
+      {{_pid, ref}, new_running} ->
+        Process.demonitor(ref, [:flush])
+        {:noreply, %{state | running_tasks: new_running}}
+
+      {nil, _} ->
+        Logger.warning("Task finished for unknown task id: #{inspect(task_id)}")
+        {:noreply, state}
+    end
   end
 
   @impl true
@@ -159,9 +195,24 @@ defmodule Ottr do
   end
 
   @impl true
-  def handle_info({:retry_task, queue_name, task, via_tuple}, state) do
-    GenServer.cast(via_tuple.(queue_name), {:insert, task})
+  def handle_info({:retry_task, queue_name, task}, state) do
+    GenServer.cast(via_tuple(queue_name), {:insert, task})
     {:noreply, state}
+  end
+
+  @impl true
+  def handle_info({:DOWN, ref, :process, _pid, _reason}, state) do
+    # prevent double execution of the same task
+    case Enum.find(state.running_tasks, fn {_task_id, {_pid, r}} -> r == ref end) do
+      {task_id, _} ->
+        Tasks.update_task(Tasks.get_task!(task_id), %{status: "pending", locked_at: nil})
+        new_running = Map.delete(state.running_tasks, task_id)
+        {:noreply, %{state | running_tasks: new_running}}
+
+      nil ->
+        Logger.debug("Received :DOWN for unknown or already cleaned up task.")
+        {:noreply, state}
+    end
   end
 
   # handle_info function - handles unexpected messages
@@ -191,10 +242,19 @@ defmodule Ottr do
 
   defp do_flush(queue_name, buffer) do
     Enum.each(buffer, fn task ->
+      now = DateTime.utc_now()
+
+      Tasks.update_task(Tasks.get_task!(task.id), %{
+        status: "in_progress",
+        locked_at: now
+      })
+
       :poolboy.transaction(
         :task_worker_pool,
         fn pid ->
-          GenServer.cast(self(), {:task_started, task.id, pid})
+          ref = Process.monitor(pid)
+
+          GenServer.cast(self(), {:task_started, task.id, pid, ref})
 
           send(
             pid,
@@ -209,24 +269,33 @@ defmodule Ottr do
     end)
   end
 
-  def process_task(queue_name, task) do
-    # fail = :true
+  defp process_task(queue_name, %{data: %{"type" => type, "args" => args}} = task) do
     Logger.info("Processing task concurrently: #{inspect(task.data)}")
-    :timer.sleep(100)
 
-    if :rand.uniform(10) == 1 do
-      Ottr.Retry.maybe_retry(
-        task,
-        queue_name,
-        @retry_limit,
-        &via_tuple/1,
-        Tasks,
-        DeadLetterTable
-      )
-    else
-      Logger.info("Task processed successfully: #{inspect(task.data)}")
-      fetch_task = Tasks.get_task!(task.id)
-      Tasks.update_task(fetch_task, %{status: "done", locked_at: nil})
+    task_for_retry = %{task | data: task.data}
+
+    handler = Ottr.Handlers.resolve_handler(type)
+
+    case handler.handle(args) do
+      :ok ->
+        mark_done(task)
+
+      {:error, reason} ->
+        Ottr.Retry.maybe_retry(
+          task_for_retry,
+          queue_name,
+          @retry_limit,
+          &via_tuple/1,
+          Tasks,
+          DeadLetterTable,
+          reason
+        )
     end
+  end
+
+  defp mark_done(task) do
+    Logger.info("Task processed successfully: #{inspect(task.data)}")
+    fetch_task = Tasks.get_task!(task.id)
+    Tasks.update_task(fetch_task, %{status: "done", locked_at: nil})
   end
 end

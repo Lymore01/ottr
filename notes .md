@@ -55,3 +55,6 @@
 ├── mix.exs                 # Mix project config
 ├── README.md               # Project overview & quick start
 └── LICENSE
+
+
+Exactly-once task locking > Robust retry + dead letter queue > Crash recovery > Observability
