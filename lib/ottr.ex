@@ -6,7 +6,7 @@ defmodule Ottr do
   alias OttrRepo.DeadLetterTasks, as: DeadLetterTable
 
   # constants
-  @flush_interval_ms 30_000
+  @flush_interval_ms 1_000
   @max_buffer_size 5
   @retry_limit 4
   @timeout_seconds 300
@@ -241,6 +241,8 @@ defmodule Ottr do
   defp do_flush(_queue_name, []), do: :ok
 
   defp do_flush(queue_name, buffer) do
+    :telemetry.execute([:ottr, :queue, :flush], %{count: length(buffer)}, %{queue: queue_name})
+
     Enum.each(buffer, fn task ->
       now = DateTime.utc_now()
 
@@ -272,15 +274,49 @@ defmodule Ottr do
   defp process_task(queue_name, %{data: %{"type" => type, "args" => args}} = task) do
     Logger.info("Processing task concurrently: #{inspect(task.data)}")
 
+    start_time = System.monotonic_time()
+
+    :telemetry.execute([:ottr, :task, :started], %{system_time: System.system_time()}, %{
+      type: type,
+      queue: queue_name
+    })
+
     task_for_retry = %{task | data: task.data}
 
     handler = Ottr.Handlers.resolve_handler(type)
 
     case handler.handle(args) do
-      :ok ->
+      {:done, completed_workflow} ->
+        mark_done(task)
+
+        duration =
+          DateTime.diff(completed_workflow.finished_at, completed_workflow.started_at, :second)
+
+        :telemetry.execute([:ottr, :workflow, :completed], %{duration: duration}, %{
+          name: completed_workflow.name,
+          queue: completed_workflow.queue,
+          steps: length(completed_workflow.workflow_steps)
+        })
+
+      {:ok, _workflow} ->
+        duration = System.monotonic_time() - start_time
+
+        :telemetry.execute([:ottr, :task, :completed], %{duration: duration}, %{
+          type: type,
+          queue: queue_name
+        })
+
         mark_done(task)
 
       {:error, reason} ->
+        duration = System.monotonic_time() - start_time
+
+        :telemetry.execute([:ottr, :task, :failed], %{duration: duration}, %{
+          type: type,
+          queue: queue_name,
+          reason: inspect(reason)
+        })
+
         Ottr.Retry.maybe_retry(
           task_for_retry,
           queue_name,

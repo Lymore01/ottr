@@ -16,7 +16,23 @@ defmodule OttrApp do
       Ottr.Scheduler
     ]
 
+    :telemetry.attach_many(
+      "ottr-logger",
+      [
+        [:ottr, :task, :started],
+        [:ottr, :task, :completed],
+        [:ottr, :task, :failed],
+        [:ottr, :task, :retry],
+        [:ottr, :task, :dead_letter],
+        [:ottr, :queue, :flush],
+        [:ottr, :workflow, :completed]
+      ],
+      &Ottr.Telemetry.TelemetryLogger.handle_event/4,
+      nil
+    )
+
     opts = [strategy: :one_for_one, name: Ottr.Supervisor]
+
     Supervisor.start_link(children, opts)
   end
 end

@@ -15,6 +15,11 @@ defmodule Ottr.Retry do
     retries = Map.get(fetch_task, :retries, 0) + 1
 
     if retries < retry_limit do
+      :telemetry.execute([:ottr, :task, :retry], %{retry: task.retries}, %{
+        type: task.data["type"],
+        queue: queue_name
+      })
+
       tasks_mod.update_task(fetch_task, %{retries: retries, status: "pending", locked_at: nil})
 
       # exponential backoff formula
@@ -33,6 +38,12 @@ defmodule Ottr.Retry do
       Logger.warning("Task failed, retrying: #{inspect(task.data)} (Attempt #{retries})")
       :retrying
     else
+      :telemetry.execute([:ottr, :task, :dead_letter], %{}, %{
+        task_id: task.id,
+        type: task.data["args"],
+        queue: queue_name
+      })
+
       tasks_mod.update_task(fetch_task, %{status: "failed", locked_at: nil})
       dead_letter_mod.move_to_dead_letter(fetch_task, reason)
       Logger.error("Task failed after retries: #{inspect(task.data)}")

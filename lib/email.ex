@@ -1,6 +1,7 @@
 defmodule Ottr.Email do
+  require Logger
   def send(%{"body" => _body, "subject" => subject, "to" => to}) do
-    IO.puts("Sending email to #{to} with subject '#{subject}'")
+    Logger.info("[Workflow] Sending email to #{to} with subject '#{subject}'")
     :ok
   end
 end

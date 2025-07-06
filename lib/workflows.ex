@@ -8,11 +8,19 @@ defmodule OttrRepo.Workflows do
     OttrRepo.all(Workflow)
   end
 
+  @spec get_workflow!(any()) ::
+          nil | [%{optional(atom()) => any()}] | %{optional(atom()) => any()}
   def get_workflow!(id) do
     OttrRepo.get!(Workflow, id) |> OttrRepo.preload(:workflow_steps)
   end
 
   def create_workflow(attrs \\ %{}) do
+    %Workflow{}
+    |> Workflow.changeset(attrs)
+    |> OttrRepo.insert()
+  end
+
+  def create_workflow!(attrs \\ %{}) do
     %Workflow{}
     |> Workflow.changeset(attrs)
     |> OttrRepo.insert()

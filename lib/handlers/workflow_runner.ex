@@ -1,5 +1,6 @@
 defmodule Ottr.TaskHandlers.WorkflowRunner do
   @behaviour Ottr.TaskHandler
+
   alias OttrRepo.Workflows
   alias Ottr.Utils.TemplateResolver
 
@@ -9,11 +10,16 @@ defmodule Ottr.TaskHandlers.WorkflowRunner do
 
     case Enum.at(steps, step_number - 1) do
       nil ->
-        :ok
+        {:ok, workflow} = Workflows.update_workflow(workflow, %{started_at: DateTime.utc_now()})
+        {:ok, workflow}
 
       step ->
-        handler = Ottr.Handlers.resolve_handler(step.type)
+        if step_number == 1 && is_nil(workflow.started_at) do
+          {:ok, _workflow} =
+            Workflows.update_workflow(workflow, %{started_at: DateTime.utc_now()})
+        end
 
+        handler = Ottr.Handlers.resolve_handler(step.type)
         resolved_args = TemplateResolver.interpolate(step.args, context)
 
         case handler.handle(resolved_args) do
@@ -29,9 +35,15 @@ defmodule Ottr.TaskHandlers.WorkflowRunner do
                   }
                 }
               })
-            end
 
-            :ok
+              {:ok, workflow}
+            else
+              # the last step
+              {:ok, completed_workflow} =
+                Workflows.update_workflow(workflow, %{finished_at: DateTime.utc_now()})
+
+              {:done, completed_workflow}
+            end
 
           {:error, reason} ->
             {:error, reason}

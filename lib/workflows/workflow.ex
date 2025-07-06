@@ -9,6 +9,8 @@ defmodule OttrRepo.Workflows.Workflow do
     field :queue, :string
     field :trigger_type, :string
     field :trigger_data, :map
+    field :started_at, :utc_datetime_usec
+    field :finished_at, :utc_datetime_usec
 
     has_many :workflow_steps, WorkflowStep, on_replace: :delete
 
@@ -17,7 +19,7 @@ defmodule OttrRepo.Workflows.Workflow do
 
   def changeset(workflow, attrs) do
     workflow
-    |> cast(attrs, [:name, :queue, :trigger_type, :trigger_data])
+    |> cast(attrs, [:name, :queue, :trigger_type, :trigger_data, :started_at, :finished_at])
     |> validate_required([:name, :trigger_type])
     |> cast_assoc(:workflow_steps)
   end
