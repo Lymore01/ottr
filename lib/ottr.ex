@@ -287,10 +287,11 @@ defmodule Ottr do
 
     case handler.handle(args) do
       {:done, completed_workflow} ->
+
         mark_done(task)
 
         duration =
-          DateTime.diff(completed_workflow.finished_at, completed_workflow.started_at, :second)
+          safe_diff_ms(completed_workflow.finished_at, completed_workflow.started_at)
 
         :telemetry.execute([:ottr, :workflow, :completed], %{duration: duration}, %{
           name: completed_workflow.name,
@@ -328,6 +329,14 @@ defmodule Ottr do
         )
     end
   end
+
+  defp safe_diff_ms(%DateTime{} = finished, %DateTime{} = started) do
+    seconds = DateTime.diff(finished, started, :second)
+    milliseconds = seconds * 1_000
+    milliseconds
+  end
+
+  defp safe_diff_ms(_, _), do: 0
 
   defp mark_done(task) do
     Logger.info("Task processed successfully: #{inspect(task.data)}")

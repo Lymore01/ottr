@@ -14,10 +14,19 @@
 # 13. Testing and validation - DONE
 # 14. Security considerations
 # 15. Workflow duration - DONE
-# 16. Out off the box app integrations
+# 16. Out off the box app integrations ie. Slack, whatsapp, YT, tiktok
 # 17. Webhook listeners
 # 18. Data mapping, data from one step can be consumed by another
-# 19. Add conditionals as context
+# 19. Add conditionals in context, to choose the next step based on the condition - DONE
+# 20. Create a parser - PARTIAL, more capabilities below
+<!-- more parser features -->
+parentheses - DONE
+negation
+inclusion checks "in"
+custom funcs eg start_with
+arithmetic
+typecasting 
+error reporting
 
 
 
@@ -131,7 +140,16 @@ Ottr.insert("signup_queue", %{
   }
 })
 
-Ottr.insert("testing", %{
+<!-- conditionals -->
+Workflows.create_step(%{
+  "position": 2,
+  "type": "send_email",
+  "args": { "to": "{{user_email}}", "subject": "Hi!" },
+  "condition": { "user_subscribed": true } # run only when user is subscribed
+  "workflow_id": workflow.id
+})
+
+Ottr.insert("default", %{
   data: %{
     "type" => "send_email",
    "args" => %{
@@ -142,9 +160,24 @@ Ottr.insert("testing", %{
   }
 })
 
+
 Webhook triggers
 
 Step result passing
 
 Optional: conditionals, delays, visual flow
 
+
+
+
+<!-- parser -->
+expr = "user.age >= 18 and user.verified == true"
+context = %{
+  "user" => %{
+    "age" => 25,
+    "verified" => true
+  }
+}
+
+Ottr.Utils.ConditionParser.eval(expr, context)
+# => true

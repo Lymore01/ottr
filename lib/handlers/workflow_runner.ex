@@ -3,6 +3,7 @@ defmodule Ottr.TaskHandlers.WorkflowRunner do
 
   alias OttrRepo.Workflows
   alias Ottr.Utils.TemplateResolver
+  alias Ottr.Utils.ConditionalEvaluator
 
   def handle(%{"workflow_id" => id, "step" => step_number, "context" => context}) do
     workflow = Workflows.get_workflow!(id)
@@ -19,34 +20,50 @@ defmodule Ottr.TaskHandlers.WorkflowRunner do
             Workflows.update_workflow(workflow, %{started_at: DateTime.utc_now()})
         end
 
-        handler = Ottr.Handlers.resolve_handler(step.type)
-        resolved_args = TemplateResolver.interpolate(step.args, context)
+        if ConditionalEvaluator.should_run?(step.condition, context) do
+          handler = Ottr.Handlers.resolve_handler(step.type)
+          resolved_args = TemplateResolver.interpolate(step.args, context)
 
-        case handler.handle(resolved_args) do
-          :ok ->
-            if Enum.at(steps, step_number) do
-              Ottr.insert(workflow.queue, %{
-                data: %{
-                  "type" => "workflow_runner",
-                  "args" => %{
-                    "workflow_id" => id,
-                    "step" => step_number + 1,
-                    "context" => context
+          case handler.handle(resolved_args) do
+            :ok ->
+              if Enum.at(steps, step_number) do
+                Ottr.insert(workflow.queue, %{
+                  data: %{
+                    "type" => "workflow_runner",
+                    "args" => %{
+                      "workflow_id" => id,
+                      "step" => step_number + 1,
+                      "context" => context
+                    }
                   }
-                }
-              })
+                })
 
-              {:ok, workflow}
-            else
-              # the last step
-              {:ok, completed_workflow} =
-                Workflows.update_workflow(workflow, %{finished_at: DateTime.utc_now()})
+                {:ok, workflow}
+              else
+                # the last step
+                {:ok, completed_workflow} =
+                  Workflows.update_workflow(workflow, %{finished_at: DateTime.utc_now()})
 
-              {:done, completed_workflow}
-            end
+                {:done, completed_workflow}
+              end
 
-          {:error, reason} ->
-            {:error, reason}
+            {:error, reason} ->
+              {:error, reason}
+          end
+        else
+          # condition not met, skip to next step
+          Ottr.insert(workflow.queue, %{
+            data: %{
+              "type" => "workflow_runner",
+              "args" => %{
+                "workflow_id" => id,
+                "step" => step_number + 1,
+                "context" => context
+              }
+            }
+          })
+
+          {:ok, workflow}
         end
     end
   end

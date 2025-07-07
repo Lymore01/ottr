@@ -13,14 +13,18 @@ Ottr.create_queue("default")
     trigger_data: %{"note" => "Triggered manually from seeds"}
   })
 
-# 3. Add steps to the workflow
+# 3. Add steps to the workflow (with optional conditions)
+
+# Step 1: Log - always runs
 Workflows.create_step(%{
   position: 1,
   type: "log",
   args: %{"message" => "Starting workflow for {{user_name}}"},
+  condition: nil,
   workflow_id: workflow.id
 })
 
+# Step 2: Send email - only if user is verified
 Workflows.create_step(%{
   position: 2,
   type: "send_email",
@@ -29,13 +33,16 @@ Workflows.create_step(%{
     "subject" => "Welcome, {{user_name}}!",
     "body" => "Hi {{user_name}},\n\nWe're glad to have you onboard."
   },
+  condition: "user.verified == true",
   workflow_id: workflow.id
 })
 
+# Step 3: Log success - only if user is admin OR verified
 Workflows.create_step(%{
   position: 3,
   type: "log",
   args: %{"message" => "Email sent to {{user_email}}"},
+  condition: "user.verified == true or user.admin == true",
   workflow_id: workflow.id
 })
 
@@ -48,10 +55,14 @@ Ottr.insert("default", %{
       "step" => 1,
       "context" => %{
         "user_name" => "Jane Doe",
-        "user_email" => "jane@example.com"
+        "user_email" => "jane@example.com",
+        "user" => %{
+          "verified" => true,
+          "admin" => false
+        }
       }
     }
   }
 })
 
-IO.puts("🚀 Seeded workflow and queued initial task.")
+IO.puts("🚀 Seeded workflow with conditional steps and queued initial task.")

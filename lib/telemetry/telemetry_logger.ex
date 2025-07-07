@@ -28,7 +28,7 @@ defmodule Ottr.Telemetry.TelemetryLogger do
 
   # workflow
   def handle_event([:ottr, :workflow, :completed], %{duration: duration}, metadata, _config) do
-    Logger.info("[Telemetry] Workflow completed in #{duration} seconds: #{inspect(metadata)}")
+    Logger.info("[Telemetry] Workflow completed in #{duration} ms: #{inspect(metadata)}")
   end
 
   def handle_event(event, measurements, metadata, _config) do

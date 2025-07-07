@@ -8,6 +8,7 @@ defmodule OttrRepo.Workflows.WorkflowStep do
     field :position, :integer
     field :type, :string
     field :args, :map
+    field :condition, OttrRepo.Types.Condition
 
     belongs_to :workflow, Workflow
 
@@ -16,7 +17,7 @@ defmodule OttrRepo.Workflows.WorkflowStep do
 
   def changeset(step, attrs) do
     step
-    |> cast(attrs, [:position, :type, :args, :workflow_id])
+    |> cast(attrs, [:position, :type, :args, :condition, :workflow_id])
     |> validate_required([:position, :type, :args, :workflow_id])
   end
 end
