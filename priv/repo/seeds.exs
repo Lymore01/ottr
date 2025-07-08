@@ -1,5 +1,5 @@
+# alias Ottr.Repo, as: OttrRepo
 alias Ottr.OttrRepo.Workflows
-alias Ottr.Repo, as: OttrRepo
 
 # 1. Create the queue
 Ottr.create_queue("default")

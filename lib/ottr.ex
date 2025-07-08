@@ -1,9 +1,10 @@
 defmodule Ottr do
   use GenServer
   require Logger
-  alias OttrRepo.Tasks
-  alias OttrRepo.Queues
-  alias OttrRepo.DeadLetterTasks, as: DeadLetterTable
+  alias Ottr.OttrRepo.Tasks
+  alias Ottr.OttrRepo.Queues
+  alias Ottr.OttrRepo.DeadLetters
+  alias Ottr.Handlers.Handler
 
   # constants
   @flush_interval_ms 1_000
@@ -271,7 +272,8 @@ defmodule Ottr do
     end)
   end
 
-  defp process_task(queue_name, %{data: %{"type" => type, "args" => args}} = task) do
+  # TODO: change it back to private function after tests
+  def process_task(queue_name, %{data: %{"type" => type, "args" => args}} = task) do
     Logger.info("Processing task concurrently: #{inspect(task.data)}")
 
     start_time = System.monotonic_time()
@@ -283,7 +285,7 @@ defmodule Ottr do
 
     task_for_retry = %{task | data: task.data}
 
-    handler = Ottr.Handlers.resolve_handler(type)
+    handler = Handler.resolve_handler(type)
 
     case handler.handle(args) do
       {:done, completed_workflow} ->
@@ -318,13 +320,13 @@ defmodule Ottr do
           reason: inspect(reason)
         })
 
-        Ottr.Retry.maybe_retry(
+        Ottr.Schedulers.Retry.maybe_retry(
           task_for_retry,
           queue_name,
           @retry_limit,
           &via_tuple/1,
           Tasks,
-          DeadLetterTable,
+          DeadLetters,
           reason
         )
     end
