@@ -60,7 +60,8 @@ defmodule Ottr.MixProject do
       {:bandit, "~> 1.5"},
       {:poolboy, "~> 1.5"},
       {:quantum, "~> 3.0"},
-      {:tzdata, "~> 1.1"}
+      {:tzdata, "~> 1.1"},
+      {:mox, "~> 1.2"}
     ]
   end
 

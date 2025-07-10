@@ -288,8 +288,10 @@ defmodule Ottr do
     handler = Handler.resolve_handler(type)
 
     case handler.handle(args) do
-      {:done, completed_workflow} ->
+      :ok ->
+        mark_done(task)
 
+      {:done, completed_workflow} ->
         mark_done(task)
 
         duration =

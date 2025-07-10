@@ -26,7 +26,7 @@ defmodule Ottr.Handlers.Generic do
 
 
     case Map.get(args, "key1") do
-      nil -> Logger.warn("key1 not found in the arguments")
+      nil -> Logger.warning("key1 not found in the arguments")
       value -> Logger.info("Processing value for key1: #{value}")
     end
 

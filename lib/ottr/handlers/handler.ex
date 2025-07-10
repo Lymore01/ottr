@@ -4,16 +4,27 @@ defmodule Ottr.Handlers.Handler do
   """
   @spec resolve_handler(String.t()) :: module()
   def resolve_handler(type) when is_binary(type) do
-    mod =
-      type
-      |> Macro.camelize()
-      |> then(&Module.concat([Ottr.Handlers, &1]))
 
-    if Code.ensure_loaded?(mod) and function_exported?(mod, :handle, 1) do
-      mod
+    handler = Application.get_env(:ottr, :email_sender_handler)
+
+
+    handler =
+      if handler do
+        handler
+      else
+        type
+        |> Macro.camelize()
+        |> then(&Module.concat([Ottr.Handlers, &1]))
+      end
+
+    IO.inspect(handler, label: "Resolved Handler")
+
+
+    if Code.ensure_loaded?(handler) and function_exported?(handler, :handle, 1) do
+      handler
     else
       raise ArgumentError,
-            "No valid handler found for task type #{inspect(type)} (looked for #{inspect(mod)})"
+            "No valid handler found for task type #{inspect(type)} (looked for #{inspect(handler)})"
     end
   end
 end
