@@ -7,7 +7,7 @@
 # 6. Persistence / Durability - DONE
 # 7. Dead letter queue - DONE
 # 8. Visibility timeout - DONE
-# 9. Monitoring and metrics
+# 9. Monitoring and metrics - PARTIAL
 # 10. Robust error handling - PARTIAL
 # 11. Graceful shutdown
 # 12. Documentation and examples
@@ -181,3 +181,7 @@ context = %{
 
 Ottr.Utils.ConditionParser.eval(expr, context)
 # => true
+
+
+## MVP version
+Log -> send_email -> Log : REF(seeds.exs)

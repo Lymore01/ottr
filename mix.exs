@@ -61,7 +61,8 @@ defmodule Ottr.MixProject do
       {:poolboy, "~> 1.5"},
       {:quantum, "~> 3.0"},
       {:tzdata, "~> 1.1"},
-      {:mox, "~> 1.2"}
+      {:mox, "~> 1.2"},
+      {:httpoison, "~> 2.2"}
     ]
   end
 

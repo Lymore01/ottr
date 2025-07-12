@@ -46,6 +46,11 @@ config :ottr, OttrWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :ottr, Ottr.Mailer, adapter: Swoosh.Adapters.Local
 
+# TODO: uncomment this in prod
+# config :sample, Sample.Mailer,
+#   adapter: Swoosh.Adapters.Sendgrid,
+#   api_key: Application.get_env(:ottr, :sendgrid_api_key)
+
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.17.11",

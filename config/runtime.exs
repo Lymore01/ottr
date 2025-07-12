@@ -20,6 +20,8 @@ if System.get_env("PHX_SERVER") do
   config :ottr, OttrWeb.Endpoint, server: true
 end
 
+# config :ottr, :sendgrid_api_key, System.fetch_env!("SENDGRID_API_KEY")
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||
