@@ -62,7 +62,8 @@ defmodule Ottr.MixProject do
       {:quantum, "~> 3.0"},
       {:tzdata, "~> 1.1"},
       {:mox, "~> 1.2"},
-      {:httpoison, "~> 2.2"}
+      {:httpoison, "~> 2.2"},
+      {:pbkdf2_elixir, "~> 2.3"}
     ]
   end
 

@@ -78,6 +78,7 @@ defmodule OttrWeb.CoreComponents do
                   <.icon name="hero-x-mark-solid" class="h-5 w-5" />
                 </button>
               </div>
+
               <div id={"#{@id}-content"}>
                 {render_slot(@inner_block)}
               </div>
@@ -123,10 +124,11 @@ defmodule OttrWeb.CoreComponents do
     >
       <p :if={@title} class="flex items-center gap-1.5 text-sm font-semibold leading-6">
         <.icon :if={@kind == :info} name="hero-information-circle-mini" class="h-4 w-4" />
-        <.icon :if={@kind == :error} name="hero-exclamation-circle-mini" class="h-4 w-4" />
-        {@title}
+        <.icon :if={@kind == :error} name="hero-exclamation-circle-mini" class="h-4 w-4" /> {@title}
       </p>
+
       <p class="mt-2 text-sm leading-5">{msg}</p>
+
       <button type="button" class="group absolute top-1 right-1 p-2" aria-label={gettext("close")}>
         <.icon name="hero-x-mark-solid" class="h-5 w-5 opacity-40 group-hover:opacity-70" />
       </button>
@@ -320,9 +322,9 @@ defmodule OttrWeb.CoreComponents do
           checked={@checked}
           class="rounded border-zinc-300 text-zinc-900 focus:ring-0"
           {@rest}
-        />
-        {@label}
+        /> {@label}
       </label>
+
       <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """
@@ -332,6 +334,7 @@ defmodule OttrWeb.CoreComponents do
     ~H"""
     <div>
       <.label for={@id}>{@label}</.label>
+
       <select
         id={@id}
         name={@name}
@@ -340,8 +343,9 @@ defmodule OttrWeb.CoreComponents do
         {@rest}
       >
         <option :if={@prompt} value="">{@prompt}</option>
-        {Phoenix.HTML.Form.options_for_select(@options, @value)}
+         {Phoenix.HTML.Form.options_for_select(@options, @value)}
       </select>
+
       <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """
@@ -351,7 +355,7 @@ defmodule OttrWeb.CoreComponents do
     ~H"""
     <div>
       <.label for={@id}>{@label}</.label>
-      <textarea
+       <textarea
         id={@id}
         name={@name}
         class={[
@@ -371,6 +375,7 @@ defmodule OttrWeb.CoreComponents do
     ~H"""
     <div>
       <.label for={@id}>{@label}</.label>
+
       <input
         type={@type}
         name={@name}
@@ -410,8 +415,9 @@ defmodule OttrWeb.CoreComponents do
   def error(assigns) do
     ~H"""
     <p class="mt-3 flex gap-3 text-sm leading-6 text-rose-600">
-      <.icon name="hero-exclamation-circle-mini" class="mt-0.5 h-5 w-5 flex-none" />
-      {render_slot(@inner_block)}
+      <.icon name="hero-exclamation-circle-mini" class="mt-0.5 h-5 w-5 flex-none" /> {render_slot(
+        @inner_block
+      )}
     </p>
     """
   end
@@ -432,10 +438,12 @@ defmodule OttrWeb.CoreComponents do
         <h1 class="text-lg font-semibold leading-8 text-zinc-800">
           {render_slot(@inner_block)}
         </h1>
+
         <p :if={@subtitle != []} class="mt-2 text-sm leading-6 text-zinc-600">
           {render_slot(@subtitle)}
         </p>
       </div>
+
       <div class="flex-none">{render_slot(@actions)}</div>
     </header>
     """
@@ -478,11 +486,13 @@ defmodule OttrWeb.CoreComponents do
         <thead class="text-sm text-left leading-6 text-zinc-500">
           <tr>
             <th :for={col <- @col} class="p-0 pb-4 pr-6 font-normal">{col[:label]}</th>
+
             <th :if={@action != []} class="relative p-0 pb-4">
               <span class="sr-only">{gettext("Actions")}</span>
             </th>
           </tr>
         </thead>
+
         <tbody
           id={@id}
           phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
@@ -501,6 +511,7 @@ defmodule OttrWeb.CoreComponents do
                 </span>
               </div>
             </td>
+
             <td :if={@action != []} class="relative w-14 p-0">
               <div class="relative whitespace-nowrap py-4 text-right text-sm font-medium">
                 <span class="absolute -inset-y-px -right-4 left-0 group-hover:bg-zinc-50 sm:rounded-r-xl" />
@@ -539,6 +550,7 @@ defmodule OttrWeb.CoreComponents do
       <dl class="-my-4 divide-y divide-zinc-100">
         <div :for={item <- @item} class="flex gap-4 py-4 text-sm leading-6 sm:gap-8">
           <dt class="w-1/4 flex-none text-zinc-500">{item.title}</dt>
+
           <dd class="text-zinc-700">{render_slot(item)}</dd>
         </div>
       </dl>
@@ -563,8 +575,7 @@ defmodule OttrWeb.CoreComponents do
         navigate={@navigate}
         class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
       >
-        <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
-        {render_slot(@inner_block)}
+        <.icon name="hero-arrow-left-solid" class="h-3 w-3" /> {render_slot(@inner_block)}
       </.link>
     </div>
     """
@@ -672,5 +683,67 @@ defmodule OttrWeb.CoreComponents do
   """
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
+  end
+
+  def navbar(assigns) do
+    ~H"""
+    <nav class="flex justify-between items-center">
+      <div class="flex items-center w-full">
+        <h1 class="font-semibold text-lg tracking-tighter text-brand">Ottr.</h1>
+
+        <ul class="flex items-center gap-8 text-sm ml-20 text-zinc-800">
+          <li class="flex items-center gap-1 transition-colors duration-200 hover:text-zinc-600 cursor-pointer">
+            Solution
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </li>
+
+          <li class="flex items-center gap-1 transition-colors duration-200 hover:text-zinc-600 cursor-pointer">
+            Customers
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </li>
+
+          <li class="transition-colors duration-200 hover:text-zinc-600 cursor-pointer">
+            Pricing
+          </li>
+        </ul>
+      </div>
+
+      <div class="flex gap-4 items-center">
+        <.button class="text-[#004838] text-sm px-4 py-2 text-nowrap bg-[white] shadow-none text-[black] font-normal rounded-sm hover:bg-[white]">
+          Log In
+        </.button>
+
+        <.button class="text-[#E2FB6C] text-sm px-4 py-2 text-nowrap bg-[#073127] text-foreground font-light shadow-none rounded-sm hover:bg-[#004838] transition-colors">
+          Start Now
+        </.button>
+      </div>
+    </nav>
+    """
   end
 end
