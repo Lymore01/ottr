@@ -185,6 +185,29 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+@layer utilities {
+  .bg-dot-fade::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image:
+      linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+      linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-position: center;
+    background-repeat: repeat;
+    mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 100%);
+    -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 100%);
+  }
+
+  .bg-dot-fade > * {
+    position: relative;
+    z-index: 10;
+  }
+}
+
+
 body {
   font-family: var(--font-lexend);
   background-color: var(--background);

@@ -20,11 +20,21 @@ module.exports = {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-10px)' },
         },
+        'marquee': {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        'marquee-reverse': {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(50%)' },
+        },
       },
       animation: {
         'float-slow': 'float 6s ease-in-out infinite',
         'float-medium': 'float 4s ease-in-out infinite',
         'float-fast': 'float 3s ease-in-out infinite',
+         'marquee': 'marquee 25s linear infinite',
+        'marquee-reverse': 'marquee-reverse 30s linear infinite',
       },
       colors: {
         brand: "var(--brand)",
