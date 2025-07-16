@@ -19,6 +19,8 @@ defmodule OttrWeb.CoreComponents do
 
   alias Phoenix.LiveView.JS
 
+  use OttrWeb, :verified_routes
+
   @doc """
   Renders a modal.
 
@@ -382,7 +384,7 @@ defmodule OttrWeb.CoreComponents do
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
+          "mt-2 block w-full rounded-sm text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
           @errors == [] && "border-zinc-300 focus:border-zinc-400",
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
@@ -735,13 +737,13 @@ defmodule OttrWeb.CoreComponents do
       </div>
 
       <div class="flex gap-4 items-center">
-         <button class="phx-submit-loading:opacity-75 bg-[white] hover:bg-[white]/80 text-[#004838] text-sm px-4 py-2 font-semibold rounded-sm shadow-none transition-colors text-nowrap">
+         <.link href={~p"/users/log_in"} class="phx-submit-loading:opacity-75 bg-[white] hover:bg-[white]/80 text-[#004838] text-sm px-4 py-2 font-semibold rounded-sm shadow-none transition-colors text-nowrap">
           Log In
-        </button>
+        </.link>
 
-         <button class="phx-submit-loading:opacity-75 bg-[#073127] hover:bg-[#004838] text-[#E2FB6C] text-sm px-4 py-2 font-light rounded-sm shadow-none transition-colors text-nowrap">
+         <.link href={~p"/users/register"} class="phx-submit-loading:opacity-75 bg-[#073127] hover:bg-[#004838] text-[#E2FB6C] text-sm px-4 py-2 font-light rounded-sm shadow-none transition-colors text-nowrap">
           Start Now
-        </button>
+        </.link>
       </div>
     </nav>
     """
