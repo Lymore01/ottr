@@ -3,14 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="csrf-token" content={get_csrf_token()} />
-    <.live_title default="Ottr" suffix=" · Workflow Orchestration">
-      {assigns[:page_title]}
+    <meta name="csrf-token" content={get_csrf_token()} /> <% title =
+      assigns[:page_title] || "Ottr" %> <% suffix =
+      assigns[:page_title_suffix] || " | Workflow Orchestration" %>
+    <.live_title default={title} suffix={suffix}>
+      {title}
     </.live_title>
-    <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
   </head>
+  
   <body class="">
     <%!-- <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end ">
       <%= if @current_user do %>
@@ -52,7 +55,6 @@
           </.link>
         </li>
       <% end %>
-    </ul> --%>
-    {@inner_content}
+    </ul> --%> {@inner_content}
   </body>
 </html>

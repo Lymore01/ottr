@@ -1,0 +1,221 @@
+<.flash_group flash={@flash} />
+<main class="overflow-hidden min-h-screen bg-[#EBEDE8]">
+  <div class="h-auto py-4 max-w-8xl mx-auto w-full">
+    <header class="w-full border border-b-border border-t-0 border-l-0 border-r-0 pb-3 md:px-16 flex justify-between">
+      <%!-- TODO: Design a proper logo --%>
+      <.link href={~p"/"} class="font-semibold text-lg tracking-tighter text-brand">
+        Ottr.
+      </.link>
+      
+      <%= case @page do %>
+        <% "login" -> %>
+          <.link
+            href={~p"/users/register"}
+            class="phx-submit-loading:opacity-75 border border-border text-[#004838] hover:bg-[#004838] hover:text-[#E2FB6C] text-sm px-4 py-2 font-semibold rounded-sm shadow-none transition-colors text-nowrap"
+          >
+            Sign Up
+          </.link>
+        <% "register" -> %>
+          <.link
+            href={~p"/users/log_in"}
+            class="phx-submit-loading:opacity-75 border border-border text-[#004838] hover:bg-[#004838] hover:text-[#E2FB6C] text-sm px-4 py-2 font-semibold rounded-sm shadow-none transition-colors text-nowrap"
+          >
+            Log In
+          </.link>
+        <% "reset_password" -> %>
+          <.link
+            href={~p"/users/log_in"}
+            class="phx-submit-loading:opacity-75 border border-border text-[#004838] hover:bg-[#004838] hover:text-[#E2FB6C] text-sm px-4 py-2 font-semibold rounded-sm shadow-none transition-colors text-nowrap"
+          >
+            Back to Login
+          </.link>
+        <% "forgot_password" -> %>
+          <.link
+            href={~p"/users/log_in"}
+            class="phx-submit-loading:opacity-75 border border-border text-[#004838] hover:bg-[#004838] hover:text-[#E2FB6C] text-sm px-4 py-2 font-semibold rounded-sm shadow-none transition-colors text-nowrap"
+          >
+            Back to Login
+          </.link>
+        <% "confirmation_instructions" -> %>
+          <.link
+            href={~p"/users/log_in"}
+            class="phx-submit-loading:opacity-75 border border-border text-[#004838] hover:bg-[#004838] hover:text-[#E2FB6C] text-sm px-4 py-2 font-semibold rounded-sm shadow-none transition-colors text-nowrap"
+          >
+            Back to Login
+          </.link>
+        <% "confirm" -> %>
+          <.link
+            href={~p"/users/log_in"}
+            class="phx-submit-loading:opacity-75 border border-border text-[#004838] hover:bg-[#004838] hover:text-[#E2FB6C] text-sm px-4 py-2 font-semibold rounded-sm shadow-none transition-colors text-nowrap"
+          >
+            Back to Login
+          </.link>
+      <% end %>
+    </header>
+    
+    <div class="text-foreground w-full px-4 sm:px-6 lg:px-16 xl:px-20 py-12">
+      <section class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        <!-- Left Column: Text Content -->
+        <div
+          class="space-y-6 text-center md:text-left"
+          style="
+      background-image:
+        linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+      background-position: center center;
+      background-repeat: repeat;
+    "
+        >
+          <h1 class="text-3xl font-semibold leading-tight tracking-tight text-[#073127]">
+            <%= if @page == "login" do %>
+              Welcome Back to Ottr!
+            <% else %>
+              <%= if @page == "register" do %>
+                Automate your world with ease using Ottr
+              <% else %>
+                <%= if @page == "reset_password" do %>
+                  Reset your password
+                <% else %>
+                  <%= if @page == "confirmation_instructions" do %>
+                    ✅ Email Sent!
+                  <% else %>
+                    <%= if @page == "confirm" do %>
+                      Confirm Your Email 🎉
+                    <% else %>
+                      Forgot your password?
+                    <% end %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            <% end %>
+          </h1>
+          
+          <p class="text-base text-zinc-600 leading-relaxed">
+            <%= if @page == "login" do %>
+              We’re excited to have you back! Let’s pick up where you left off and get back to automating what matters most ⚡.
+            <% else %>
+              <%= if @page == "register" do %>
+                Less busywork. More impact. Ottr lets your team automate what matters most. It's fast, easy, and free!
+              <% else %>
+                <%= if @page == "reset_password" do %>
+                  You're almost there 🔑 Set a new password below to regain access to your account.
+                <% else %>
+                  <%= if @page == "confirmation_instructions" do %>
+                    We've sent a confirmation link to your inbox. Just click it to activate your account.
+                  <% else %>
+                    <%= if @page == "confirm" do %>
+                      You're one click away from unlocking automation bliss ✨
+                      Smash that button to activate your Ottr account then dive into a world where workflows run themselves!
+                    <% else %>
+                      Don't worry, we’ve got you 🔒 Enter your email and we’ll send instructions to reset your password.
+                    <% end %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            <% end %>
+          </p>
+          
+          <%= if @page == "register" do %>
+            <ul class="space-y-4 text-zinc-700 text-sm leading-relaxed">
+              <li class="flex items-start gap-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="#073127"
+                  class="w-5 h-5 mt-1"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                
+                <span>
+                  <strong>10,000+ workflows created</strong> and run smoothly on Ottr every day.
+                </span>
+              </li>
+              
+              <li class="flex items-start gap-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="#073127"
+                  class="w-5 h-5 mt-1"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                
+                <span>
+                  <strong>15 hours saved weekly</strong>
+                  in automating repetitive work reclaiming your team’s time.
+                </span>
+              </li>
+              
+              <li class="flex items-start gap-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="#073127"
+                  class="w-5 h-5 mt-1"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                
+                <span>
+                  <strong>Smart scheduling</strong>
+                  - Run automations on your schedule, from reminders to off-peak workflows.
+                </span>
+              </li>
+            </ul>
+          <% end %>
+        </div>
+        
+<!-- Right Column: Form -->
+        <div class="flex justify-end">
+          <div class="w-full max-w-md p-8 border rounded-sm bg-white dark:bg-gray-900">
+            <.header class="text-center mb-6">
+              <h1 class="text-2xl font-semibold leading-tight tracking-tight text-[#073127]">
+                <%= if @page == "login" do %>
+                  Log In to Your Account
+                <% else %>
+                  <%= if @page == "register" do %>
+                    Create Your Account
+                  <% else %>
+                    <%= if @page == "reset_password" do %>
+                      Choose a New Password
+                    <% else %>
+                      <%= if @page == "confirmation_instructions" do %>
+                        No confirmation instructions received?
+                      <% else %>
+                        <%= if @page == "reset_password" do %>
+                          Reset Your Password
+                        <% end %>
+                      <% end %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              </h1>
+            </.header>
+             {@inner_content}
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>

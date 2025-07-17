@@ -361,12 +361,82 @@ defmodule OttrWeb.CoreComponents do
         id={@id}
         name={@name}
         class={[
-          "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6 min-h-[6rem]",
-          @errors == [] && "border-zinc-300 focus:border-zinc-400",
-          @errors != [] && "border-rose-400 focus:border-rose-400"
+          "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6 min-h-[6rem] ",
+          @errors == [] && "border-zinc-300 focus:border-[#004838]/30",
+          @errors != [] && "border-rose-400 focus:border-rose-400 focus:ring-2 focus:ring-rose-400/30"
         ]}
         {@rest}
       >{Phoenix.HTML.Form.normalize_value("textarea", @value)}</textarea>
+      <.error :for={msg <- @errors}>{msg}</.error>
+    </div>
+    """
+  end
+
+  def input(%{type: "password"} = assigns) do
+    ~H"""
+    <div x-data="{ show: false }">
+      <.label for={@id}>{@label}</.label>
+
+      <div class={[
+        "mt-2 relative items-center ",
+        @errors != [] && "border-rose-400 focus-within:border-rose-400 focus-within:ring-0"
+      ]}>
+        <input
+          x-bind:type="show ? 'text' : 'password'"
+          name={@name}
+          id={@id}
+          value={Phoenix.HTML.Form.normalize_value(@type, @value)}
+          class={[
+            "block w-full text-zinc-900 sm:text-sm sm:leading-6 rounded-sm border-zinc-300",
+            "focus:border-[#004838]/30 focus:outline-none focus:ring-2 focus:ring-[#004838]/50"
+          ]}
+          {@rest}
+        />
+
+    <!-- Eye Toggle Button -->
+        <button
+          type="button"
+          tabindex="-1"
+          class="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-500 hover:text-zinc-700"
+          @click="show = !show"
+        >
+          <!-- Show eye when hidden -->
+          <svg
+            x-show="!show"
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7S3.732 16.057 2.458 12z"
+            />
+          </svg>
+
+    <!-- Show eye-off when shown -->
+          <svg
+            x-show="show"
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.965 9.965 0 012.008-3.368M6.018 6.018A9.964 9.964 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.974 9.974 0 01-4.21 5.248M3 3l18 18"
+            />
+          </svg>
+        </button>
+      </div>
+
       <.error :for={msg <- @errors}>{msg}</.error>
     </div>
     """
@@ -385,8 +455,9 @@ defmodule OttrWeb.CoreComponents do
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
           "mt-2 block w-full rounded-sm text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
-          @errors == [] && "border-zinc-300 focus:border-zinc-400",
-          @errors != [] && "border-rose-400 focus:border-rose-400"
+          @errors == [] &&
+            "border-zinc-300 focus:border-[#004838]/30 focus:ring-2 focus:ring-[#004838]/50",
+          @errors != [] && "border-rose-400 focus:border-rose-400 focus:ring-2 focus:ring-rose-400/30"
         ]}
         {@rest}
       />
@@ -685,67 +756,5 @@ defmodule OttrWeb.CoreComponents do
   """
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
-  end
-
-  def navbar(assigns) do
-    ~H"""
-    <nav class="flex justify-between items-center">
-      <div class="flex items-center w-full">
-        <h1 class="font-semibold text-lg tracking-tighter text-brand">Ottr.</h1>
-
-        <ul class="flex items-center gap-8 text-sm ml-20 text-zinc-800">
-          <li class="flex items-center gap-1 transition-colors duration-200 hover:text-zinc-600 cursor-pointer">
-            Solution
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </li>
-
-          <li class="flex items-center gap-1 transition-colors duration-200 hover:text-zinc-600 cursor-pointer">
-            Customers
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </li>
-
-          <li class="transition-colors duration-200 hover:text-zinc-600 cursor-pointer">
-            Pricing
-          </li>
-        </ul>
-      </div>
-
-      <div class="flex gap-4 items-center">
-         <.link href={~p"/users/log_in"} class="phx-submit-loading:opacity-75 bg-[white] hover:bg-[white]/80 text-[#004838] text-sm px-4 py-2 font-semibold rounded-sm shadow-none transition-colors text-nowrap">
-          Log In
-        </.link>
-
-         <.link href={~p"/users/register"} class="phx-submit-loading:opacity-75 bg-[#073127] hover:bg-[#004838] text-[#E2FB6C] text-sm px-4 py-2 font-light rounded-sm shadow-none transition-colors text-nowrap">
-          Start Now
-        </.link>
-      </div>
-    </nav>
-    """
   end
 end

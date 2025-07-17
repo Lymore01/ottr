@@ -7,6 +7,8 @@ defmodule Ottr.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :current_password, :string, virtual: true, redact: true
+    field :first_name, :string
+    field :last_name, :string
     field :confirmed_at, :utc_datetime
 
     timestamps(type: :utc_datetime)
@@ -37,9 +39,10 @@ defmodule Ottr.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :first_name, :last_name])
     |> validate_email(opts)
     |> validate_password(opts)
+    |> validate_name(opts, [:first_name, :last_name])
   end
 
   defp validate_email(changeset, opts) do
@@ -53,12 +56,23 @@ defmodule Ottr.Accounts.User do
   defp validate_password(changeset, opts) do
     changeset
     |> validate_required([:password])
-    |> validate_length(:password, min: 12, max: 72)
+    |> validate_length(:password, min: 8, max: 72)
     # Examples of additional password validation:
     # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
     # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
     # |> validate_format(:password, ~r/[!?@#$%^&*_0-9]/, message: "at least one digit or punctuation character")
     |> maybe_hash_password(opts)
+  end
+
+  defp validate_name(changeset, _opts, fields) do
+    Enum.reduce(fields, changeset, fn field, acc ->
+      acc
+      |> validate_required([field])
+      |> validate_length(field, min: 2, max: 50)
+      |> validate_format(field, ~r/^[a-zA-Z\s\-']+$/,
+        message: "can only contain letters, spaces, hyphens, and apostrophes"
+      )
+    end)
   end
 
   defp maybe_hash_password(changeset, opts) do

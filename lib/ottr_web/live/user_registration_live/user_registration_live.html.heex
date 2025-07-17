@@ -1,210 +1,86 @@
-<.flash_group flash={@flash} />
-<main class="overflow-hidden min-h-screen bg-[#EBEDE8]">
-  <div class="h-auto py-4 max-w-8xl mx-auto w-full">
-    <header class="w-full border border-b-border border-t-0 border-l-0 border-r-0 pb-3 md:px-16 flex justify-between">
-      <h1 class="font-semibold text-lg tracking-tighter text-brand">Ottr.</h1>
-      
-      <.link
-        href={~p"/users/log_in"}
-        class="phx-submit-loading:opacity-75 border border-border text-[#004838] hover:bg-[#004838] hover:text-[#E2FB6C] text-sm px-4 py-2 font-semibold rounded-sm shadow-none transition-colors text-nowrap"
-      >
-        Log In
-      </.link>
-    </header>
+
+<div class="mx-auto max-w-sm">
+  <.simple_form
+    for={@form}
+    id="registration_form"
+    phx-submit="save"
+    phx-change="validate"
+    phx-trigger-action={@trigger_submit}
+    action={~p"/users/log_in?#{%{_action: "registered"}}"}
+    method="post"
+    class="space-y-6"
+  >
+    <.error
+      :if={@check_errors}
+      class="text-red-600 bg-red-100 p-3 rounded-md border border-red-300 shadow-sm"
+    >
+      Oops, something went wrong! Please check the errors below.
+    </.error>
     
-    <div class="text-foreground w-full px-4 sm:px-6 lg:px-16 xl:px-20 py-12">
-      <section class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-        
-<!-- Left Column: Text Content -->
-        <div
-          class="space-y-6 text-center md:text-left"
-          style="
-      background-image:
-        linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-        linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
-      background-size: 40px 40px;
-      background-position: center center;
-      background-repeat: repeat;
-    "
-        >
-          <h1 class="text-3xl font-semibold leading-tight tracking-tight text-[#073127]">
-            Automate your world with ease using Ottr
-          </h1>
-          
-          <p class="text-base text-zinc-600 leading-relaxed">
-            Less busywork. More impact. Ottr lets your team automate what matters most. It's fast, easy, and free!
-          </p>
-          
-          <ul class="space-y-4 text-zinc-700 text-sm leading-relaxed">
-            <li class="flex items-start gap-3">
-              <!-- Heroicon check circle -->
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-                stroke="#073127"
-                class="w-5 h-5 mt-1"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              
-              <span>
-                <strong>10,000+ workflows created</strong> and run smoothly on Ottr every day.
-              </span>
-            </li>
-            
-            <li class="flex items-start gap-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-                stroke="#073127"
-                class="w-5 h-5 mt-1"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              
-              <span>
-                <strong>15 hours saved weekly</strong>
-                in automating repetitive work reclaiming your team’s time.
-              </span>
-            </li>
-            
-            <li class="flex items-start gap-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-                stroke="#073127"
-                class="w-5 h-5 mt-1"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              
-              <span>
-                <strong>Smart scheduling</strong>
-                - Run automations on your schedule, from reminders to off-peak workflows.
-              </span>
-            </li>
-          </ul>
-        </div>
-        
-<!-- Right Column: Form -->
-        <div class="flex justify-end">
-          <div class="w-full max-w-md p-8 border rounded-sm bg-white dark:bg-gray-900">
-            <.header class="text-center mb-6">
-              <h1 class="text-2xl font-semibold leading-tight tracking-tight text-[#073127]">
-                Create Your Account
-              </h1>
-            </.header>
-            
-            <.simple_form
-              for={@form}
-              id="registration_form"
-              phx-submit="save"
-              phx-change="validate"
-              phx-trigger-action={@trigger_submit}
-              action={~p"/users/log_in?#{%{_action: "registered"}}"}
-              method="post"
-              class="space-y-6"
-            >
-              <.error
-                :if={@check_errors}
-                class="text-red-600 bg-red-100 p-3 rounded-md border border-red-300 shadow-sm"
-              >
-                Oops, something went wrong! Please check the errors below.
-              </.error>
-              
-              <div class="flex flex-col lg:flex-row gap-4">
-                <.input
-                  field={@form[:first_name]}
-                  type="text"
-                  label="First Name"
-                  required
-                  class="rounded-none border-gray-300 focus:border-brand focus:ring-2 focus:ring-brand/50 w-full"
-                  placeholder="John"
-                  autocomplete="given-name"
-                />
-                <.input
-                  field={@form[:last_name]}
-                  type="text"
-                  label="Last Name"
-                  required
-                  class="rounded-none border-gray-300 focus:border-brand focus:ring-2 focus:ring-brand/50 w-full"
-                  placeholder="Doe"
-                  autocomplete="family-name"
-                />
-              </div>
-              
-              <.input
-                field={@form[:email]}
-                type="email"
-                label="Email"
-                required
-                class="rounded-none border-gray-300 focus:border-brand focus:ring-2 focus:ring-brand/50"
-                placeholder="you@example.com"
-                autocomplete="email"
-              />
-              <.input
-                field={@form[:password]}
-                type="password"
-                label="Password"
-                required
-                class="rounded-none border-gray-300 focus:border-brand focus:ring-2 focus:ring-brand/50"
-                placeholder="Enter a strong password"
-                autocomplete="new-password"
-              />
-              <p class="text-sm text-gray-500 dark:text-gray-400 -mt-2 leading-7">
-                By signing up, you agree to Ottr's
-                <.link navigate={~p"/terms"} class="text-[#004838] font-semibold hover:underline">
-                  Terms of Service
-                </.link>
-                and <.link
-                  navigate={~p"/policy"}
-                  class="text-[#004838] font-semibold hover:underline"
-                >Privacy Policy</.link>.
-              </p>
-              
-              <:actions>
-                <div class="flex flex-col gap-6 w-full">
-                  <button
-                    phx-disable-with="Creating account..."
-                    class="w-full phx-submit-loading:opacity-75 bg-[#073127] hover:bg-[#004838] text-[#E2FB6C] text-sm px-4 py-4 font-semibold rounded-sm shadow-none transition-colors"
-                  >
-                    Create An Account
-                  </button>
-                  
-                  <p class="text-sm text-gray-500 dark:text-gray-400 text-center">
-                    Already have an account?
-                    <.link
-                      navigate={~p"/users/log_in"}
-                      class="text-[#004838] font-semibold hover:underline"
-                    >
-                      Log in here
-                    </.link>
-                    and get started.
-                  </p>
-                </div>
-              </:actions>
-            </.simple_form>
-          </div>
-        </div>
-      </section>
+    <div class="flex flex-col lg:flex-row gap-4">
+      <.input
+        field={@form[:first_name]}
+        type="text"
+        label="First Name"
+        required
+        class="rounded-none border-gray-300 focus:border-brand focus:ring-2 focus:ring-brand/50 w-full"
+        placeholder="Tralalero"
+        autocomplete="given-name"
+      />
+      <.input
+        field={@form[:last_name]}
+        type="text"
+        label="Last Name"
+        required
+        class="rounded-none border-gray-300 focus:border-brand focus:ring-2 focus:ring-brand/50 w-full"
+        placeholder="Tralala"
+        autocomplete="family-name"
+      />
     </div>
-  </div>
-</main>
+    
+    <.input
+      field={@form[:email]}
+      type="email"
+      label="Email"
+      required
+      class="rounded-none border-gray-300 focus:border-brand focus:ring-2 focus:ring-brand/50"
+      placeholder="tralala@brainrot.com"
+      autocomplete="email"
+    />
+    <.input
+      field={@form[:password]}
+      type="password"
+      label="Password"
+      required
+      class="rounded-none border-gray-300 focus:border-brand focus:ring-2 focus:ring-brand/50"
+      placeholder="Enter a strong password"
+      autocomplete="new-password"
+    />
+    <p class="text-sm text-gray-500 dark:text-gray-400 -mt-2 leading-7">
+      By signing up, you agree to Ottr's
+      <.link navigate={~p"/terms"} class="text-[#004838] font-semibold hover:underline">
+        Terms of Service
+      </.link>
+      and <.link navigate={~p"/policy"} class="text-[#004838] font-semibold hover:underline">Privacy Policy</.link>.
+    </p>
+    
+    <:actions>
+      <div class="flex flex-col gap-6 w-full">
+        <button
+          phx-disable-with="Creating account..."
+          class="w-full phx-submit-loading:opacity-75 bg-[#073127] hover:bg-[#004838] text-[#E2FB6C] text-sm px-4 py-4 font-semibold rounded-sm shadow-none transition-colors"
+        >
+          Create An Account
+        </button>
+        
+        <p class="text-sm text-gray-500 dark:text-gray-400 text-center">
+          Already have an account?
+          <.link navigate={~p"/users/log_in"} class="text-[#004838] font-semibold hover:underline">
+            Log in here
+          </.link>
+          and get started.
+        </p>
+      </div>
+    </:actions>
+  </.simple_form>
+</div>

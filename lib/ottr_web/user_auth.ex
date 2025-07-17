@@ -110,6 +110,17 @@ defmodule OttrWeb.UserAuth do
     end
   end
 
+  def ensure_email_confirmed(conn, user) do
+    if user.confirmed_at do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must confirm your email to continue.")
+      |> redirect(to: ~p"/users/confirm")
+      |> halt()
+    end
+  end
+
   @doc """
   Handles mounting and authenticating the current_user in LiveViews.
 

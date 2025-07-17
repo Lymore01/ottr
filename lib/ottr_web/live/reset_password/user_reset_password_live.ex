@@ -3,43 +3,16 @@ defmodule OttrWeb.UserResetPasswordLive do
 
   alias Ottr.Accounts
 
-  def render(assigns) do
-    ~H"""
-    <div class="mx-auto max-w-sm">
-      <.header class="text-center">Reset Password</.header>
-
-      <.simple_form
-        for={@form}
-        id="reset_password_form"
-        phx-submit="reset_password"
-        phx-change="validate"
-      >
-        <.error :if={@form.errors != []}>
-          Oops, something went wrong! Please check the errors below.
-        </.error>
-
-        <.input field={@form[:password]} type="password" label="New password" required />
-        <.input
-          field={@form[:password_confirmation]}
-          type="password"
-          label="Confirm new password"
-          required
-        />
-        <:actions>
-          <.button phx-disable-with="Resetting..." class="w-full">Reset Password</.button>
-        </:actions>
-      </.simple_form>
-
-      <p class="text-center text-sm mt-4">
-        <.link href={~p"/users/register"}>Register</.link>
-        | <.link href={~p"/users/log_in"}>Log in</.link>
-      </p>
-    </div>
-    """
-  end
-
   def mount(params, _session, socket) do
-    socket = assign_user_and_token(socket, params)
+    socket =
+      socket
+      |> assign(:page, "reset_password")
+      |> assign(check_errors: false)
+      |> assign_user_and_token(params)
+      |> assign(
+        page_title: "Reset Password",
+        page_title_suffix: " | Ottr Auth"
+      )
 
     form_source =
       case socket.assigns do
@@ -64,18 +37,30 @@ defmodule OttrWeb.UserResetPasswordLive do
          |> redirect(to: ~p"/users/log_in")}
 
       {:error, changeset} ->
-        {:noreply, assign_form(socket, Map.put(changeset, :action, :insert))}
+        {:noreply,
+         socket |> assign(check_errors: true) |> assign_form(Map.put(changeset, :action, :insert))}
     end
   end
 
   def handle_event("validate", %{"user" => user_params}, socket) do
     changeset = Accounts.change_user_password(socket.assigns.user, user_params)
-    {:noreply, assign_form(socket, Map.put(changeset, :action, :validate))}
+
+    if changeset.valid? do
+      {:noreply,
+       socket
+       |> assign(check_errors: false)
+       |> assign_form(Map.put(changeset, :action, :validate))}
+    else
+      {:noreply,
+       socket
+       |> assign(check_errors: true)
+       |> assign_form(Map.put(changeset, :action, :validate))}
+    end
   end
 
   defp assign_user_and_token(socket, %{"token" => token}) do
     if user = Accounts.get_user_by_reset_password_token(token) do
-      assign(socket, user: user, token: token)
+      assign(socket, user: user, token: token, check_errors: false)
     else
       socket
       |> put_flash(:error, "Reset password link is invalid or it has expired.")

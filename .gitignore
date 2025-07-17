@@ -41,4 +41,8 @@ npm-debug.log
 # Ignore Elixir LS cache
 .elixir_ls/
 
+# Environment Variables
 .env
+
+# node_modules
+/node_modules/
