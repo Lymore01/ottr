@@ -22,7 +22,7 @@ defmodule OttrWeb.Landing.Footer do
           <ul class="space-y-2 text-sm text-zinc-300">
             <li><a href="#" class="hover:text-white transition">Features</a></li>
 
-            <li><a href="#" class="hover:text-white transition">Pricing</a></li>
+            <li><a href="#" class="hover:text-white transition">Pricing (Free)</a></li>
 
             <li><a href="#" class="hover:text-white transition">Integrations</a></li>
 
@@ -36,8 +36,6 @@ defmodule OttrWeb.Landing.Footer do
 
           <ul class="space-y-2 text-sm text-zinc-300">
             <li><a href="#" class="hover:text-white transition">About Us</a></li>
-
-            <li><a href="#" class="hover:text-white transition">Careers</a></li>
 
             <li><a href="#" class="hover:text-white transition">Blog</a></li>
 
@@ -64,8 +62,7 @@ defmodule OttrWeb.Landing.Footer do
           </ul>
         </div>
       </div>
-
-      <%!-- creator --%>
+       <%!-- creator --%>
       <div class="mt-16 border-t border-zinc-700 pt-8 w-full flex flex-col sm:flex-row justify-between items-center gap-6 text-sm text-zinc-400">
         <div class="flex items-center gap-3 text-center sm:text-left">
           <img

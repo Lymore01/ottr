@@ -212,7 +212,7 @@ defmodule OttrWeb.Landing.Hero do
               href={~p"/users/log_in"}
               class="phx-submit-loading:opacity-75 bg-[white] hover:bg-[white]/80 text-[#004838] text-sm px-4 py-2 font-semibold rounded-sm shadow-none transition-colors text-nowrap"
             >
-              Get a Demo
+              Continue
             </.link>
           </div>
         </div>

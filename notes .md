@@ -414,3 +414,6 @@ Design insp = https://dribbble.com/shots/23713828-Clause-Contract-Management-Lan
   
 </div>
 
+
+
+<!-- add validations for first name and last name -->

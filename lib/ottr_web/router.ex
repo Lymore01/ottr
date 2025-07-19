@@ -72,6 +72,13 @@ defmodule OttrWeb.Router do
     end
   end
 
+  # test
+  scope "/", OttrWeb do
+    pipe_through [:browser]
+
+    live "/dashboard", Dashboard.DashboardLive
+  end
+
   scope "/", OttrWeb do
     pipe_through [:browser]
 

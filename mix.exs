@@ -42,14 +42,7 @@ defmodule Ottr.MixProject do
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.8.3"},
       {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
-      {:tailwind, "~> 0.2.0", runtime: Mix.env() == :dev},
-      {:heroicons,
-       github: "tailwindlabs/heroicons",
-       tag: "v2.1.1",
-       sparse: "optimized",
-       app: false,
-       compile: false,
-       depth: 1},
+      {:tailwind, "~> 0.3.1", runtime: Mix.env() == :dev},
       {:swoosh, "~> 1.5"},
       {:finch, "~> 0.13"},
       {:telemetry_metrics, "~> 1.0"},
@@ -63,7 +56,8 @@ defmodule Ottr.MixProject do
       {:tzdata, "~> 1.1"},
       {:mox, "~> 1.2"},
       {:httpoison, "~> 2.2"},
-      {:pbkdf2_elixir, "~> 2.3"}
+      {:pbkdf2_elixir, "~> 2.3"},
+      {:heroicons, "~> 0.5.6"}
     ]
   end
 

@@ -3,17 +3,21 @@ defmodule OttrWeb.Landing.Navbar do
 
   use OttrWeb, :verified_routes
 
-  import OttrWeb.Landing.{CtaButtons}
+  import OttrWeb.Landing.{CtaButtons, Solutions, Products, PricingModal}
 
   def navbar(assigns) do
     ~H"""
-    <header class="w-full relative ">
+    <header class="w-full relative" x-data=" { openItem : null, showPricingModal: false } ">
       <nav class="flex justify-between items-center">
         <div class="flex items-center w-full">
           <h1 class="font-semibold text-lg tracking-tighter text-brand">Ottr.</h1>
 
-          <ul class="flex items-center gap-8 text-sm ml-20 text-zinc-800">
-            <li class="flex items-center gap-1 transition-colors duration-200 hover:text-zinc-600 cursor-pointer">
+          <ul class="flex items-center gap-6 text-sm ml-20 text-zinc-800">
+            <li
+              class="flex items-center gap-1 transition-colors duration-200 hover:text-zinc-600 cursor-pointer hover:bg-[white]/50 cursor-pointer p-2 rounded-sm"
+              x-bind:class="openItem === 'solution' ? 'bg-emerald-50 text-emerald-600 transition-colors hover:bg-emerald-50 hover:text-emerald-600' : 'bg-transparent'"
+              @click="openItem = openItem === 'solution' ? null : 'solution'"
+            >
               Solution
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -31,8 +35,12 @@ defmodule OttrWeb.Landing.Navbar do
               </svg>
             </li>
 
-            <li class="flex items-center gap-1 transition-colors duration-200 hover:text-zinc-600 cursor-pointer">
-              Customers
+            <li
+              class="flex items-center gap-1 transition-colors duration-200 hover:text-zinc-600 cursor-pointer hover:bg-[white]/50 cursor-pointer p-2 rounded-sm"
+              x-bind:class="openItem === 'products' ? 'bg-emerald-50 text-emerald-600 transition-colors hover:bg-emerald-50 hover:text-emerald-600' : 'bg-transparent'"
+              @click="openItem = openItem === 'products' ? null : 'products'"
+            >
+              Products
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-4 w-4"
@@ -49,7 +57,10 @@ defmodule OttrWeb.Landing.Navbar do
               </svg>
             </li>
 
-            <li class="transition-colors duration-200 hover:text-zinc-600 cursor-pointer">
+            <li
+              class="transition-colors duration-200 hover:text-zinc-600 hover:bg-[white]/50 cursor-pointer p-2 rounded-sm"
+              @click="showPricingModal = true"
+            >
               Pricing
             </li>
           </ul>
@@ -65,6 +76,15 @@ defmodule OttrWeb.Landing.Navbar do
           </.link>
         </.cta_buttons>
       </nav>
+      <!-- Dropdown Panel -->
+      <div
+        class="absolute top-full left-0 w-full bg-white shadow p-6 border-t z-10 mt-2 rounded-lg"
+        x-show="openItem"
+        x-transition
+      >
+        <.solutions /> <.products />
+      </div>
+       <.pricing_modal />
     </header>
     """
   end
