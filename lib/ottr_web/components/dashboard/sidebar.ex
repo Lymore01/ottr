@@ -23,7 +23,7 @@ defmodule OttrWeb.Dashboard.Sidebar do
       <div class="space-y-6">
         <div class="border-b border-border pb-4 flex gap-3 max-w-full overflow-x-hidden">
           <div
-            class="grid size-10 shrink-0 place-content-center rounded-md bg-green-400 cursor-pointer"
+            class="grid size-10 shrink-0 place-content-center rounded-md bg-[#004838] cursor-pointer"
             x-transition:enter="transition-all ease-in-out duration-300"
             x-transition:leave="transition-all ease-in-out duration-300"
           >
@@ -68,7 +68,7 @@ defmodule OttrWeb.Dashboard.Sidebar do
             </div>
           </div>
         </div>
-        
+
     <!-- Nav -->
         <div class="space-y-1 border-b border-border pb-4">
           <%!-- <p
@@ -148,7 +148,7 @@ defmodule OttrWeb.Dashboard.Sidebar do
             x-ref="panel"
             x-transition
             @click.outside="panelOpen = false"
-            class="fixed z-50 w-72 rounded-md border bg-white border border-border text-sm text-muted-foreground"
+            class="fixed z-50 w-48 rounded-md border bg-white border border-border text-sm text-muted-foreground"
             x-bind:style="`left: ${panelX}px; top: ${panelY}px`"
           >
             <p class="text-xs font-semibold text-zinc-700 border-b border-border px-4 py-3">
@@ -164,7 +164,7 @@ defmodule OttrWeb.Dashboard.Sidebar do
                     x-bind:value="mode"
                     x-bind:checked="mode === currentMode"
                     @change="setMode(mode)"
-                    class="size-4"
+                    class="size-4 accent-emerald-600"
                   /> <span x-text="mode.charAt(0).toUpperCase() + mode.slice(1)"></span>
                 </label>
               </template>

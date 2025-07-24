@@ -1,19 +1,281 @@
 <.flash_group flash={@flash} />
 <main class="w-screen h-screen overflow-hidden flex text-zinc-800 relative" x-data="sidebarToggle">
-  <div
+  <%!-- display this on playgrounds only --%>
+  <%!-- <div
     class="absolute top-0 left-0 w-full h-full z-0"
     style="
     background-image:
       radial-gradient(circle, rgba(0, 0, 0, 0.15) 1px, transparent 1px),
       radial-gradient(circle, rgba(0, 0, 0, 0.15) 1px, transparent 1px);
-    background-size: 30px 30px;
+    background-size: 24px 24px;
     background-position: 7px 7px, 7px 7px;
   "
   >
-  </div>
-  <.topbar workflows={@workflows} /> <.sidebar mode="collapsed" current_path={@current_path} />
+  </div> --%>
+  <.topbar workflows={@workflows} current_path={@current_path}/> <.sidebar mode="collapsed" current_path={@current_path} />
 
- <div
+  <%!-- todo: calc(100vh - 80px) change to calc(100vh - 64px) --%>
+  <div
+    class="relative flex transition-all duration-300 ease-in-out mt-16 w-full overflow-auto p-10 "
+    x-bind:style="{
+    'margin-left': currentMode === 'collapsed'
+      ? '60px'
+      : (currentMode === 'hover' && hover === true || currentMode === 'expanded')
+        ? '220px'
+        : '60px',
+    'height': 'calc(100vh - 80px)'
+      
+  }"
+  >
+    <div class="flex flex-col gap-8 w-full max-w-[calc(100vw-220px)]">
+      <div class="flex flex-col gap-6 items-start justify-start">
+        <h1 class="text-2xl font-bold text-center text-[#073127] tracking-tight">
+          What would you like to automate?
+        </h1>
+
+        <div class="relative rounded-lg p-[2px] bg-gradient-to-r from-emerald-400 via-purple-500 to-yellow-400 w-[100%]">
+          <div class="rounded-lg">
+            <span class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+              <Heroicons.sparkles class="w-5 h-5 text-zinc-700 animate-pulse" />
+            </span>
+            <input
+              type="text"
+              placeholder="Example: Generate daily Instagram captions for my coffee shop"
+              class="w-full pl-10 border border-emerald-50 pr-4 py-3 text-sm rounded-lg text-[#073127] placeholder-zinc-500 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition duration-300"
+            />
+            <span class="absolute inset-y-0 right-3 flex items-center cursor-pointer">
+              <Heroicons.paper_airplane class="w-5 h-5 text-zinc-700 hover:text-zinc-900 transition-colors duration-200" />
+            </span>
+          </div>
+        </div>
+      </div>
+      
+<!-- Suggested Automation -->
+       <div class="w-full flex items-center justify-between mt-10">
+        <h2 class="text-lg font-semibold text-[#073127]">Suggested Automation</h2>
+        <button
+          type="button"
+          class="text-xs text-blue-600 hover:underline font-medium flex items-center gap-1"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          More
+        </button>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+        <!-- Automation 1 -->
+        <button class="p-4 bg-white border border-zinc-200 rounded-lg shadow-sm hover:shadow-md transition text-left">
+          <p class="text-sm text-zinc-700 font-medium mb-2">
+            Auto-post new blog articles to LinkedIn
+          </p>
+          <div class="flex gap-2 flex-wrap">
+            <img src="/images/logos/wordpress.svg" alt="WordPress Icon" class="h-5 w-5" />
+            <img src="/images/logos/linkedin.svg" alt="LinkedIn Icon" class="h-5 w-5" />
+          </div>
+        </button>
+        
+<!-- Automation 2 -->
+        <button class="p-4 bg-white border border-zinc-200 rounded-lg shadow-sm hover:shadow-md transition text-left">
+          <p class="text-sm text-zinc-700 font-medium mb-2">
+            Send Slack alerts for Stripe payments
+          </p>
+          <div class="flex gap-2 flex-wrap">
+            <img src="/images/logos/slack.svg" alt="Slack Icon" class="h-5 w-5" />
+            <img src="/images/logos/stripe.svg" alt="Stripe Icon" class="h-5 w-5" />
+          </div>
+        </button>
+        
+<!-- Automation 3 -->
+        <button class="p-4 bg-white border border-zinc-200 rounded-lg shadow-sm hover:shadow-md transition text-left">
+          <p class="text-sm text-zinc-700 font-medium mb-2">
+            Email new Google Form responses to team
+          </p>
+          <div class="flex gap-2 flex-wrap">
+            <img src="/images/logos/google-forms.svg" alt="Google Forms Icon" class="h-5 w-5" />
+            <img src="/images/logos/gmail.svg" alt="Gmail Icon" class="h-5 w-5" />
+          </div>
+        </button>
+      </div>
+      
+<!-- Recent Workflows -->
+      <div class="w-full flex items-center justify-between mt-10">
+        <h2 class="text-lg font-semibold text-[#073127]">Your Recent Workflows</h2>
+        <button class="bg-[#073127] hover:bg-[#004838] text-[#E2FB6C] px-6 py-3 rounded-lg text-sm font-medium shadow-sm">
+          + Create New Workflow
+        </button>
+      </div>
+      <!-- Recent Workflows -->
+      <ul class="mt-4 space-y-2">
+        <li class="p-3 bg-zinc-50 border border-zinc-200 rounded-lg hover:bg-white transition cursor-pointer flex items-center justify-between group/recent">
+          <div>
+            <span class="text-sm font-medium text-zinc-800">CRM Lead Follow-Up</span>
+            <p class="text-xs text-zinc-500">Last edited 2 days ago</p>
+          </div>
+          <div class="flex gap-2">
+            <div class="p-2 group-hover/recent:bg-zinc-50 bg-white rounded-lg flex items-center justify-center">
+              <img src="/images/logos/hubspot2.svg" alt="HubSpot Icon" class="w-8 h-8" />
+            </div>
+            <div class="p-2 group-hover/recent:bg-zinc-50 bg-white rounded-lg flex items-center justify-center">
+              <img src="/images/logos/youtube.svg" alt="YouTube Icon" class="w-8 h-8" />
+            </div>
+          </div>
+        </li>
+
+        <li class="p-3 bg-zinc-50 border border-zinc-200 rounded-lg hover:bg-white transition cursor-pointer flex items-center justify-between group/recent">
+          <div>
+            <span class="text-sm font-medium text-zinc-800">Daily Sales Summary Report</span>
+            <p class="text-xs text-zinc-500">Last edited 5 days ago</p>
+          </div>
+          <div class="flex gap-2">
+            <div class="p-2 group-hover/recent:bg-zinc-50 bg-white rounded-lg flex items-center justify-center">
+              <img src="/images/logos/meta.svg" alt="Meta Icon" class="w-8 h-8" />
+            </div>
+            <div class="p-2 group-hover/recent:bg-zinc-50 bg-white rounded-lg flex items-center justify-center">
+              <img src="/images/logos/hubspot2.svg" alt="HubSpot Icon" class="w-8 h-8" />
+            </div>
+          </div>
+        </li>
+      </ul>
+      
+<!-- Popular Integrations -->
+      <div class="w-full flex items-center justify-between mt-10">
+        <h2 class="text-lg font-semibold text-[#073127]">Popular Integrations</h2>
+        <button
+          type="button"
+          class="text-xs text-blue-600 hover:underline font-medium flex items-center gap-1"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          More
+        </button>
+      </div>
+      <div class="flex gap-4 flex-wrap mt-4">
+        <div class="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm flex items-center gap-2">
+          <img src="/images/logos/slack.svg" alt="Slack" class="h-6 w-6" />
+          <span class="text-sm text-zinc-700">Slack</span>
+        </div>
+        <div class="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm flex items-center gap-2">
+          <img src="/images/logos/notion.svg" alt="Notion" class="h-6 w-6" />
+          <span class="text-sm text-zinc-700">Notion</span>
+        </div>
+        <div class="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm flex items-center gap-2">
+          <img src="/images/logos/google-sheets.svg" alt="Google Sheets" class="h-6 w-6" />
+          <span class="text-sm text-zinc-700">Google Sheets</span>
+        </div>
+        <div class="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm flex items-center gap-2">
+          <img src="/images/logos/stripe.svg" alt="Stripe" class="h-6 w-6" />
+          <span class="text-sm text-zinc-700">Stripe</span>
+        </div>
+        <div class="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm flex items-center gap-2">
+          <img src="/images/logos/tiktok.svg" alt="Stripe" class="h-6 w-6" />
+          <span class="text-sm text-zinc-700">TikTok</span>
+        </div>
+        <div class="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm flex items-center gap-2">
+          <img src="/images/logos/youtube.svg" alt="Stripe" class="h-6 w-6" />
+          <span class="text-sm text-zinc-700">Youtube</span>
+        </div>
+      </div>
+
+      <div class="w-full flex items-center justify-between mt-10">
+        <h2 class="text-lg font-semibold text-[#073127]">Browse Templates</h2>
+        <button
+          type="button"
+          class="text-xs text-blue-600 hover:underline font-medium flex items-center gap-1"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          More
+        </button>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-zinc-700 pb-10">
+        <!-- Instagram Scheduler -->
+        <button class="bg-white border border-zinc-200 p-4 rounded-lg shadow-sm hover:shadow-lg transition-all duration-200 hover:bg-emerald-50 ring-1 ring-transparent hover:ring-emerald-300 text-left group">
+          <div class="flex items-center gap-3 mb-2">
+            <img src="/images/logos/instagram.svg" alt="Instagram" class="h-5 w-5" />
+            <h3 class="font-medium text-[#073127] group-hover:text-emerald-700">
+              Instagram Scheduler
+            </h3>
+          </div>
+          <p class="text-xs text-zinc-500">Auto-generate & schedule Instagram posts daily.</p>
+        </button>
+        
+<!-- Sales Lead Follow-up -->
+        <button class="bg-white border border-zinc-200 p-4 rounded-lg shadow-sm hover:shadow-lg transition-all duration-200 hover:bg-indigo-50 ring-1 ring-transparent hover:ring-indigo-300 text-left group">
+          <div class="flex items-center gap-3 mb-2">
+            <img src="/images/logos/salesforce.svg" alt="CRM" class="h-5 w-5" />
+            <h3 class="font-medium text-[#073127] group-hover:text-indigo-700">
+              Sales Lead Follow-up
+            </h3>
+          </div>
+          <p class="text-xs text-zinc-500">
+            Send automated emails and Slack alerts to your team.
+          </p>
+        </button>
+        
+<!-- Weekly Report Email -->
+        <button class="bg-white border border-zinc-200 p-4 rounded-lg shadow-sm hover:shadow-lg transition-all duration-200 hover:bg-yellow-50 ring-1 ring-transparent hover:ring-yellow-300 text-left group">
+          <div class="flex items-center gap-3 mb-2">
+            <img src="/images/logos/gmail.svg" alt="Email" class="h-5 w-5" />
+            <h3 class="font-medium text-[#073127] group-hover:text-yellow-700">
+              Weekly Report Email
+            </h3>
+          </div>
+          <p class="text-xs text-zinc-500">Compile metrics and email your team every Friday.</p>
+        </button>
+        
+<!-- Post Blog to Social -->
+        <button class="bg-white border border-zinc-200 p-4 rounded-lg shadow-sm hover:shadow-lg transition-all duration-200 hover:bg-pink-50 ring-1 ring-transparent hover:ring-pink-300 text-left group">
+          <div class="flex items-center gap-3 mb-2">
+            <img src="/images/logos/share.svg" alt="Share" class="h-5 w-5" />
+            <h3 class="font-medium text-[#073127] group-hover:text-pink-700">
+              Post Blog to Social
+            </h3>
+          </div>
+          <p class="text-xs text-zinc-500">
+            Automatically share blog posts on LinkedIn & Twitter.
+          </p>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <%!-- <div
   class="relative w-full h-full overflow-hidden flex items-center justify-center"
   style="touch-action: none;"
    x-bind:style="{
@@ -37,9 +299,9 @@
     class="items-center justify-center flex w-full h-full"
   >
     <!-- Your workflow diagram goes here, e.g., SVG, cards, connectors -->
-    <div class="text-zinc-800 cursor-move grid place-content-center bg-green-600 rounded-md p-6">Node A</div>
+    <div class="text-foreground cursor-grab grid place-content-center bg-[#004838] rounded-md p-6">Node A</div>
 
   </div>
 
-</div>
+</div> --%>
 </main>
