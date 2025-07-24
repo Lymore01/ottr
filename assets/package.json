@@ -1,6 +1,8 @@
 {
   "dependencies": {
-    "alpinejs": "^3.14.9"
+    "@panzoom/panzoom": "^4.6.0",
+    "alpinejs": "^3.14.9",
+    "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
     "@types/alpinejs": "^3.13.11"

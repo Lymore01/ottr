@@ -44,7 +44,7 @@ defmodule OttrWeb.Dashboard.Sidebar do
               </path>
             </svg>
           </div>
-           <%!-- TODO(Fix Me): text ellipsis not displaying, group-hover/user not working --%>
+          <%!-- TODO(Fix Me): text ellipsis not displaying, group-hover/user not working --%>
           <div
             x-bind:class="{
               'hidden': currentMode === 'collapsed',
@@ -68,7 +68,7 @@ defmodule OttrWeb.Dashboard.Sidebar do
             </div>
           </div>
         </div>
-
+        
     <!-- Nav -->
         <div class="space-y-1 border-b border-border pb-4">
           <%!-- <p

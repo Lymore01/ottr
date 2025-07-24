@@ -22,13 +22,15 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import Alpine from "alpinejs";
 import topbar from "../vendor/topbar";
+import Panzoom from '@panzoom/panzoom';
+
 
 Alpine.data("sidebarToggle", () => ({
   currentMode: localStorage.getItem("sidebarMode") || "expanded",
   panelOpen: false,
   panelX: 0,
   panelY: 0,
-  hover:false,
+  hover: false,
   togglePanel() {
     this.panelOpen = !this.panelOpen;
     if (this.panelOpen) {
@@ -46,10 +48,41 @@ Alpine.data("sidebarToggle", () => ({
     localStorage.setItem("sidebarMode", mode);
   },
   setHover(val) {
-    this.hover = val
-  }
+    this.hover = val;
+  },
 }));
 
+Alpine.data("topbarToggle", () => ({
+  workflowPanelOpen: false,
+  workflowPanelX: 0,
+  workflowPanelY: 0,
+  selectWorkflow(id) {
+    console.log("Selected Workflow: ", id);
+  },
+  toggleWorkflowOption() {
+    this.workflowPanelOpen = !this.workflowPanelOpen;
+    if (this.workflowPanelOpen) {
+      this.$nextTick(() => {
+        const rect = this.$refs.workflowOptionsTrigger.getBoundingClientRect();
+        this.workflowPanelY = rect.bottom + window.scrollY + 8;
+        this.workflowPanelX = rect.right - rect.width;
+      });
+    }
+  },
+  accountPanelOpen: false,
+  accountPanelX: 0,
+  accountPanelY: 0,
+  toggleAccount() {
+    this.accountPanelOpen = !this.accountPanelOpen;
+    if (this.accountPanelOpen) {
+      this.$nextTick(() => {
+        const rect = this.$refs.accountTrigger.getBoundingClientRect();
+        this.accountPanelY = rect.bottom + window.scrollY + 8;
+        this.accountPanelX = 0;
+      });
+    }
+  },
+}));
 
 
 let csrfToken = document
@@ -81,4 +114,5 @@ liveSocket.connect();
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket;
 window.Alpine = Alpine;
+window.Panzoom = Panzoom;
 Alpine.start();

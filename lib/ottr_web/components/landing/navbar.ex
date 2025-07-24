@@ -84,7 +84,7 @@ defmodule OttrWeb.Landing.Navbar do
       >
         <.solutions /> <.products />
       </div>
-       <.pricing_modal />
+      <.pricing_modal />
     </header>
     """
   end

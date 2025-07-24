@@ -13,7 +13,7 @@ defmodule OttrWeb.Landing.Products do
       <p class="text-sm text-zinc-600">
         Automate smarter with Ottr’s powerful products, designed to streamline your workflows and boost productivity.
       </p>
-
+      
     <!-- Automation Engine Category -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-sm text-zinc-700">
         <div class="mt-4">
@@ -136,7 +136,7 @@ defmodule OttrWeb.Landing.Products do
             </li>
           </ul>
         </div>
-
+        
     <!-- Smart Logic & AI Category -->
         <div class="mt-4">
           <h4 class="text-xs font-semibold text-zinc-600 mb-3 uppercase">Smart Logic & AI</h4>
@@ -193,7 +193,7 @@ defmodule OttrWeb.Landing.Products do
             </li>
           </ul>
         </div>
-
+        
     <!-- Integrations Category -->
         <div>
           <h4 class="text-xs font-semibold text-zinc-600 mb-3 uppercase">Integrations</h4>

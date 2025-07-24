@@ -345,7 +345,7 @@ defmodule OttrWeb.CoreComponents do
         {@rest}
       >
         <option :if={@prompt} value="">{@prompt}</option>
-         {Phoenix.HTML.Form.options_for_select(@options, @value)}
+        {Phoenix.HTML.Form.options_for_select(@options, @value)}
       </select>
 
       <.error :for={msg <- @errors}>{msg}</.error>
@@ -357,7 +357,7 @@ defmodule OttrWeb.CoreComponents do
     ~H"""
     <div>
       <.label for={@id}>{@label}</.label>
-       <textarea
+      <textarea
         id={@id}
         name={@name}
         class={[
@@ -392,7 +392,7 @@ defmodule OttrWeb.CoreComponents do
           ]}
           {@rest}
         />
-
+        
     <!-- Eye Toggle Button -->
         <button
           type="button"
@@ -417,7 +417,7 @@ defmodule OttrWeb.CoreComponents do
               d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7S3.732 16.057 2.458 12z"
             />
           </svg>
-
+          
     <!-- Show eye-off when shown -->
           <svg
             x-show="show"

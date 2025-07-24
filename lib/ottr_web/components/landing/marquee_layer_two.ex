@@ -59,7 +59,7 @@ defmodule OttrWeb.Landing.MarqueeLayerTwo do
             </g>
           </svg>
         </div>
-
+        
     <!-- duplicate for seamless looping -->
         <div class="w-16 h-16 bg-white rounded-lg flex items-center justify-center">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 256 290">

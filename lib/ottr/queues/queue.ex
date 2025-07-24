@@ -1,4 +1,4 @@
- defmodule Ottr.OttrRepo.Queue do
+defmodule Ottr.OttrRepo.Queue do
   use Ecto.Schema
   import Ecto.Changeset
 

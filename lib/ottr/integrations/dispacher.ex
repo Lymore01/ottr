@@ -7,7 +7,7 @@ defmodule Ottr.Integrations.Dispatcher do
 
   @integration_modules %{
     # "slack" => SlackIntegration
-    "email" => Email,
+    "email" => Email
     # "whatsapp" => Ottr.Integrations.WhatsAppIntegration
   }
 

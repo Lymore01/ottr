@@ -43,7 +43,7 @@ defmodule OttrWeb.Landing.Integrations do
           <br class="hidden sm:inline" /> internal APIs — your workflow, your way.
         </p>
       </div>
-       <.marquee />
+      <.marquee />
     </section>
     """
   end

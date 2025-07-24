@@ -188,7 +188,7 @@ defmodule OttrWeb.Landing.Hero do
               <span class="absolute left-0 bottom-0 w-full h-1 bg-gradient-to-r from-green-400 to-[#E2FB6C] rounded">
               </span>
             </span>
-             <br /> That Adapts in Real Time
+            <br /> That Adapts in Real Time
           </p>
 
           <div class="w-[80%] mt-6">
@@ -217,8 +217,7 @@ defmodule OttrWeb.Landing.Hero do
           </div>
         </div>
       </section>
-       <%!-- partners --%>
-      <.partners />
+      <%!-- partners --%> <.partners />
     </div>
     """
   end

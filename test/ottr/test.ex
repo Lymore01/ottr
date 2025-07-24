@@ -1,4 +1,3 @@
-
 defmodule OttrTest do
   use ExUnit.Case, async: false
   import Mox

@@ -1,5 +1,5 @@
 defmodule Ottr.Repo.Migrations.AlterConditionInWorkflowSteps do
-   use Ecto.Migration
+  use Ecto.Migration
 
   def change do
     alter table(:workflow_steps) do

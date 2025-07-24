@@ -14,7 +14,7 @@ defmodule OttrWeb.Landing.Footer do
             Effortless automation built for teams who want to save time and build smarter.
           </p>
         </div>
-
+        
     <!-- Product Links -->
         <div>
           <h3 class="text-sm font-semibold text-zinc-100 uppercase tracking-wide mb-4">Product</h3>
@@ -29,7 +29,7 @@ defmodule OttrWeb.Landing.Footer do
             <li><a href="#" class="hover:text-white transition">Changelog</a></li>
           </ul>
         </div>
-
+        
     <!-- Company Links -->
         <div>
           <h3 class="text-sm font-semibold text-zinc-100 uppercase tracking-wide mb-4">Company</h3>
@@ -42,7 +42,7 @@ defmodule OttrWeb.Landing.Footer do
             <li><a href="#" class="hover:text-white transition">Support</a></li>
           </ul>
         </div>
-
+        
     <!-- Social Media -->
         <div>
           <h3 class="text-sm font-semibold text-zinc-100 uppercase tracking-wide mb-4">More</h3>
@@ -62,7 +62,7 @@ defmodule OttrWeb.Landing.Footer do
           </ul>
         </div>
       </div>
-       <%!-- creator --%>
+      <%!-- creator --%>
       <div class="mt-16 border-t border-zinc-700 pt-8 w-full flex flex-col sm:flex-row justify-between items-center gap-6 text-sm text-zinc-400">
         <div class="flex items-center gap-3 text-center sm:text-left">
           <img

@@ -7,7 +7,6 @@ defmodule Ottr.Handlers.Generic do
     try do
       Logger.info("[Generic Task] Processing with arguments: #{inspect(args)}")
 
-
       process_generic_task(args)
 
       :ok
@@ -21,14 +20,11 @@ defmodule Ottr.Handlers.Generic do
   def handle(_), do: {:error, :invalid_task_format}
 
   defp process_generic_task(args) do
-
     Logger.info("Processing task with args: #{inspect(args)}")
-
 
     case Map.get(args, "key1") do
       nil -> Logger.warning("key1 not found in the arguments")
       value -> Logger.info("Processing value for key1: #{value}")
     end
-
   end
 end

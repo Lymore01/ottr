@@ -22,5 +22,4 @@ defmodule Ottr.Utils.TemplateResolver do
       Map.get(context, var, "")
     end)
   end
-
 end

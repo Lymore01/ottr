@@ -103,7 +103,7 @@ defmodule OttrWeb.Landing.MarqueeLayerOne do
         </div>
         <!-- Duplicate set -->
         <div class="flex gap-6 w-1/2">
-
+          
     <!-- duplicate for seamless looping -->
           <div class="flex gap-6 w-1/2">
             <div class="w-16 h-16 bg-white rounded-lg flex items-center justify-center">

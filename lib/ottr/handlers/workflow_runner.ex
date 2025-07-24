@@ -1,4 +1,4 @@
- defmodule Ottr.Handlers.WorkflowRunner do
+defmodule Ottr.Handlers.WorkflowRunner do
   @behaviour Ottr.Behaviours.Handlers
 
   alias Ottr.OttrRepo.Workflows

@@ -3,7 +3,6 @@ defmodule Ottr.OttrRepo.Workflows.Steps do
   alias Ottr.Repo, as: OttrRepo
   alias Ottr.OttrRepo.Workflows.Step, as: WorkflowStep
 
-
   def get_step!(id), do: OttrRepo.get!(WorkflowStep, id)
 
   def list_steps_for_workflow(workflow_id) do

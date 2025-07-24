@@ -3,7 +3,7 @@ defmodule OttrWeb.Landing.Cta do
 
   use OttrWeb, :verified_routes
 
-   import OttrWeb.Landing.{CtaButtons}
+  import OttrWeb.Landing.{CtaButtons}
 
   def cta(assigns) do
     ~H"""
@@ -20,7 +20,6 @@ defmodule OttrWeb.Landing.Cta do
             , <br class="hidden sm:inline" /> Not Harder?
           </h2>
         </div>
-
         <.cta_buttons />
       </div>
     </section>

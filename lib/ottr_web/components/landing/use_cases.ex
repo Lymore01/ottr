@@ -36,7 +36,7 @@ defmodule OttrWeb.Landing.UseCases do
             </p>
           </div>
         </li>
-
+        
     <!-- Data Syncing -->
         <li class="flex items-start gap-4">
           <div class="bg-emerald-50 p-2 rounded-md">
@@ -62,7 +62,7 @@ defmodule OttrWeb.Landing.UseCases do
             <p class="text-sm text-zinc-700">Keep tools in sync without manual work.</p>
           </div>
         </li>
-
+        
     <!-- Customer Onboarding -->
         <li class="flex items-start gap-4">
           <div class="bg-emerald-50 p-2 rounded-md">
@@ -88,7 +88,7 @@ defmodule OttrWeb.Landing.UseCases do
             <p class="text-sm text-zinc-700">Automate welcome and setup flows.</p>
           </div>
         </li>
-
+        
     <!-- Scheduled Jobs -->
         <li class="flex items-start gap-4">
           <div class="bg-emerald-50 p-2 rounded-md">
@@ -114,7 +114,7 @@ defmodule OttrWeb.Landing.UseCases do
             <p class="text-sm text-zinc-700">Trigger reports and actions on a schedule.</p>
           </div>
         </li>
-
+        
     <!-- AI Content Workflows -->
         <li class="flex items-start gap-4">
           <div class="bg-emerald-50 p-2 rounded-md">

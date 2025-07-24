@@ -1,5 +1,4 @@
 defmodule Ottr.Application do
-
   use Application
 
   @impl true
@@ -24,7 +23,7 @@ defmodule Ottr.Application do
         size: 5,
         max_overflow: 2
       ),
-       Ottr.Schedulers.Scheduler
+      Ottr.Schedulers.Scheduler
     ]
 
     :telemetry.attach_many(

@@ -9,7 +9,16 @@ defmodule OttrWeb.Dashboard.DashboardLive do
       |> assign(
         page_title: "Dashboard",
         page_title_suffix: " | Ottr",
-        current_path: "/dashboard"
+        current_path: "/dashboard",
+        workflows: [
+          %{id: 1, name: "Daily Sync"},
+          %{id: 2, name: "Marketing Campaign"},
+          %{id: 3, name: "Customer Onboarding"},
+          %{id: 4, name: "Weekly Report Automation"},
+          %{id: 5, name: "Sales Follow-Up"},
+          %{id: 6, name: "Bug Triage"},
+          %{id: 7, name: "Feature Launch Prep"}
+        ]
       )
 
     {:ok, socket}

@@ -31,7 +31,7 @@ defmodule OttrWeb.Landing.Features do
           to automate anything without breaking a sweat.
         </p>
       </div>
-       <%!-- features --%>
+      <%!-- features --%>
       <div
         class="max-w-6xl w-full mt-10 space-y-4 h-auto"
         style="
@@ -60,7 +60,7 @@ defmodule OttrWeb.Landing.Features do
               Explore More
             </button>
           </div>
-           <.workflow_illustration />
+          <.workflow_illustration />
         </div>
 
         <div class="w-full flex gap-4 px-6 py-8 ">

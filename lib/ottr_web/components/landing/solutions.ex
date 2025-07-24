@@ -5,7 +5,6 @@ defmodule OttrWeb.Landing.Solutions do
 
   import OttrWeb.Landing.{UseCases}
 
-
   def solutions(assigns) do
     ~H"""
     <div x-show="openItem === 'solution'" class="space-y-2">
@@ -50,7 +49,7 @@ defmodule OttrWeb.Landing.Solutions do
                 </p>
               </div>
             </li>
-
+            
     <!-- Feature 2 -->
             <li class="flex items-start gap-4">
               <div class="bg-emerald-50 p-2 rounded-md">
@@ -78,7 +77,7 @@ defmodule OttrWeb.Landing.Solutions do
                 </p>
               </div>
             </li>
-
+            
     <!-- Feature 3 -->
             <li class="flex items-start gap-4">
               <div class="bg-emerald-50 p-2 rounded-md">
@@ -106,7 +105,7 @@ defmodule OttrWeb.Landing.Solutions do
                 </p>
               </div>
             </li>
-
+            
     <!-- Feature 4 -->
             <li class="flex items-start gap-4">
               <div class="bg-emerald-50 p-2 rounded-md">
@@ -134,7 +133,7 @@ defmodule OttrWeb.Landing.Solutions do
                 </p>
               </div>
             </li>
-
+            
     <!-- Feature 5 -->
             <li class="flex items-start gap-4">
               <div class="bg-emerald-50 p-2 rounded-md">
@@ -164,7 +163,7 @@ defmodule OttrWeb.Landing.Solutions do
             </li>
           </ul>
         </div>
-
+        
     <!-- Use Cases Column -->
         <.use_cases />
       </div>

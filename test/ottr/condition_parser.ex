@@ -1,4 +1,3 @@
-
 ExUnit.start()
 
 defmodule Ottr.ConditionParserTest do

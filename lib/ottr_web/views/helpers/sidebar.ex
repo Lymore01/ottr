@@ -1,5 +1,4 @@
 defmodule OttrWeb.Helpers.Sidebar do
-
   def sidebar_class("collapsed"), do: "w-[60px]"
   def sidebar_class("hover"), do: "w-[60px] hover:w-[220px]"
   def sidebar_class("expanded"), do: "w-[220px]"

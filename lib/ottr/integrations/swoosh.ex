@@ -1,4 +1,3 @@
-
 #! TODO: Remove this file - used for testing purposes
 
 defmodule Ottr.Integrations.Swoosh do

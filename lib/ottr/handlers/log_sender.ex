@@ -1,4 +1,4 @@
- defmodule Ottr.Handlers.LogSender do
+defmodule Ottr.Handlers.LogSender do
   @behaviour Ottr.Behaviours.Handlers
   require Logger
 

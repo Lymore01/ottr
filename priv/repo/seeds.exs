@@ -67,6 +67,5 @@ Ottr.insert("default", %{
 
 IO.puts("🚀 Seeded workflow with conditional steps and queued initial task.")
 
-
 IO.puts("Seeds have been run... waiting for background tasks.")
 # :timer.sleep(:infinity)

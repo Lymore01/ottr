@@ -2,7 +2,7 @@
   <.header class="text-center">
     <:subtitle>We'll send a new confirmation link to your inbox</:subtitle>
   </.header>
-  
+
   <.simple_form for={@form} id="resend_confirmation_form" phx-submit="send_instructions">
     <.input
       field={@form[:email]}
@@ -22,7 +22,7 @@
       </button>
     </:actions>
   </.simple_form>
-  
+
   <p class="text-center text-sm mt-4">
     <.link href={~p"/users/register"} class="text-[#004838] hover:underline">Register</.link>
     | <.link href={~p"/users/log_in"} class="text-[#004838]  hover:underline">Log in</.link>

@@ -63,7 +63,7 @@ config :esbuild,
 
 # Configure tailwind (the version is required)
 config :tailwind,
-  version: "4.0.9",
+  version: "3.4.3",
   ottr: [
     args: ~w(
       --config=tailwind.config.js
