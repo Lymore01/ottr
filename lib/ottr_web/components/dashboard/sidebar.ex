@@ -94,10 +94,10 @@ defmodule OttrWeb.Dashboard.Sidebar do
               ]}
             >
               <%= case item.icon do %>
-                <% :beaker -> %>
-                  <Heroicons.beaker class="w-5 h-5 shrink-0" />
+                <% :home -> %>
+                  <Heroicons.home class="w-5 h-5 shrink-0" />
                 <% :arrows_right_left -> %>
-                  <Heroicons.arrows_right_left class="w-5 h-5 shrink-0" />
+                  <Heroicons.fire class="w-5 h-5 shrink-0" />
                 <% :puzzle_piece -> %>
                   <Heroicons.puzzle_piece class="w-5 h-5 shrink-0" />
                 <% :cog_6_tooth -> %>
@@ -109,6 +109,7 @@ defmodule OttrWeb.Dashboard.Sidebar do
               <% end %>
 
               <span
+                class="whitespace-nowrap"
                 x-bind:class="{
                   'hidden': currentMode === 'collapsed',
                   'hidden group-hover:block': currentMode === 'hover',

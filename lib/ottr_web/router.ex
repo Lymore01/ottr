@@ -74,10 +74,23 @@ defmodule OttrWeb.Router do
 
   # test
   scope "/", OttrWeb do
-    pipe_through [:browser]
+  pipe_through [:browser]
 
+  live_session :dashboard,
+    layout: {OttrWeb.Layouts, :dashboard} do
     live "/dashboard", Dashboard.DashboardLive
+    live "/dashboard/automations", Dashboard.Automations.AutomationLive
+    live "/dashboard/automations/:id", Dashboard.AutomationLive
+    live "/dashboard/workflows", Dashboard.WorkflowsLive
+    live "/dashboard/workflows/:id", Dashboard.WorkflowLive
+    live "/dashboard/workflows/new", Dashboard.WorkflowLive, :new
+    live "/dashboard/integrations", Dashboard.IntegrationsLive
+    live "/dashboard/integrations/:id", Dashboard.IntegrationLive
+    live "/dashboard/templates", Dashboard.TemplatesLive
+    live "/dashboard/templates/:id", Dashboard.TemplateLive
+    live "/dashboard/settings", Dashboard.SettingsLive
   end
+end
 
   scope "/", OttrWeb do
     pipe_through [:browser]

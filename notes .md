@@ -193,5 +193,22 @@ Design insp = https://dribbble.com/shots/23713828-Clause-Contract-Management-Lan
 TODO
 Get all integration svgs and place it in priv/static/icons/*.svg - https://www.svgrepo.com/vectors
 
+<!-- Routes -->
+
+TODAY: Home /dashboard
+<!-- Dashboard -->
+/dashboard/automations
+/dashboard/automations/:id
+/dashboard/workflows
+/dashboard/workflows/:id
+/dashboard/workflows/:new
+/dashboard/integrations
+/dashboard/integrations/:id
+/dashboard/templates
+/dashboard/templates/:id
+/dashboard/settings
+
+
+
 
 

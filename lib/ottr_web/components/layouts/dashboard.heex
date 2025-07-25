@@ -1,0 +1,19 @@
+<.flash_group flash={@flash} />
+<main class="w-screen h-screen overflow-hidden flex text-zinc-800 relative" x-data="sidebarToggle">
+  <.topbar workflows={@workflows} current_path={@current_path} />
+  <.sidebar mode="collapsed" current_path={@current_path} />
+  <div
+    class="relative flex transition-all duration-300 ease-in-out mt-16 w-full overflow-auto p-10 "
+    x-bind:style="{
+    'margin-left': currentMode === 'collapsed'
+      ? '60px'
+      : (currentMode === 'hover' && hover === true || currentMode === 'expanded')
+        ? '220px'
+        : '60px',
+    'height': 'calc(100vh - 80px)'
+      
+  }"
+  >
+    {@inner_content}
+  </div>
+</main>

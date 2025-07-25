@@ -9,6 +9,7 @@ defmodule OttrWeb.Layouts do
   `use OttrWeb, :live_view`.
   """
   use OttrWeb, :html
+  import OttrWeb.Dashboard.{Sidebar, Topbar}
 
   embed_templates "layouts/*"
 end

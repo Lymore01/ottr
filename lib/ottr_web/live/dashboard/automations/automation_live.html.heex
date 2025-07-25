@@ -1,0 +1,86 @@
+<div
+  class="w-full max-w-6xl mx-auto flex flex-col gap-10 pt-8"
+  x-data="{ selectedCategory: 'all', searchTerm: '' }"
+>
+  <section class="flex flex-col items-center gap-4">
+    <h1 class="text-3xl md:text-4xl font-bold text-[#073127] tracking-tight text-center">
+      Discover Powerful Automations
+    </h1>
+    
+    <p class="text-zinc-600 text-center max-w-2xl">
+      Browse and activate ready-made automations to save time and supercharge your workflow.
+    </p>
+    
+    <div class="w-full max-w-lg mt-4">
+      <div class="relative">
+        <input
+          type="text"
+          x-model="searchTerm"
+          placeholder="Search automations (e.g. Slack, Instagram, CRM)..."
+          class="w-full pl-12 pr-4 py-3 border border-zinc-200 rounded-lg shadow-sm text-sm focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition"
+        />
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">
+          <Heroicons.magnifying_glass class="w-5 h-5" />
+        </span>
+      </div>
+    </div>
+  </section>
+  
+<!-- Categories -->
+  <%!-- todo: Fix overflow not working --%>
+  <div class="flex gap-3 justify-start text-sm px-4 py-2 max-w-full flex-wrap">
+    <%= for category <- @categories do %>
+      <button
+        type="button"
+        class="px-4 py-2 rounded-full transition whitespace-nowrap"
+        x-bind:class={"selectedCategory === '#{String.downcase(category.value)}' ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'"}
+        @click={"selectedCategory = '#{String.downcase(category.value)}'"}
+      >
+        {category.label}
+      </button>
+    <% end %>
+  </div>
+  
+  <section>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <%= for automation <- @automations do %>
+        <div
+          x-show={
+        """
+        (selectedCategory === 'all' || selectedCategory === '#{String.downcase(automation.category)}') &&
+        ('#{automation.title}' + ' #{automation.description}').toLowerCase().includes(searchTerm.toLowerCase())
+        """
+      }
+          x-transition
+          data-category={String.downcase(automation.category)}
+        >
+          <.automation_card
+            from_logo={automation.from_logo}
+            to_logo={automation.to_logo}
+            title={automation.title}
+            category={automation.category}
+            description={automation.description}
+          />
+        </div>
+      <% end %>
+       <%!-- todo: add placeholder for empty automations --%>
+      <%!-- <div
+        x-show="
+    Array.from($el.parentElement.querySelectorAll('[data-category]')).filter(el =>
+      (selectedCategory === 'all' || selectedCategory === el.getAttribute('data-category')) &&
+      el.offsetParent !== null
+    ).length === 0
+  "
+        class="col-span-1 sm:col-span-2 lg:col-span-3 text-center text-zinc-500"
+      >
+        No automations found for this category or search.
+      </div> --%>
+    </div>
+    
+    <div class="flex justify-center mt-10">
+      <button class="px-6 py-3 rounded-lg bg-zinc-100 text-zinc-700 font-medium hover:bg-zinc-200 transition">
+        Load More
+      </button>
+    </div>
+  </section>
+</div>

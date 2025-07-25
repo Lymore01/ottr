@@ -13,8 +13,9 @@ defmodule OttrWeb.Helpers.Sidebar do
 
   def nav_items do
     [
-      %{label: "Playground", href: "/dashboard", icon: :beaker},
-      %{label: "Workflows", href: "/workflows", icon: :arrows_right_left},
+      # %{label: "Playground", href: "/dashboard", icon: :beaker},
+      %{label: "Home", href: "/dashboard", icon: :home},
+      %{label: "My Bursts", href: "/workflows", icon: :arrows_right_left},
       %{label: "Integrations", href: "/integrations", icon: :puzzle_piece},
       %{label: "Settings", href: "/settings", icon: :cog_6_tooth},
       %{label: "Templates", href: "/templates", icon: :document}

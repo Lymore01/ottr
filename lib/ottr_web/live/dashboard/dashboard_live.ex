@@ -1,7 +1,7 @@
 defmodule OttrWeb.Dashboard.DashboardLive do
   use OttrWeb, :live_view
 
-  import OttrWeb.Dashboard.{Sidebar, Topbar}
+  import OttrWeb.Dashboard.{Sidebar, Topbar, MoreButton}
 
   def mount(_params, _session, socket) do
     socket =
