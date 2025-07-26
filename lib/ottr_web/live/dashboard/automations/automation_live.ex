@@ -3,6 +3,98 @@ defmodule OttrWeb.Dashboard.Automations.AutomationLive do
 
   import OttrWeb.Dashboard.Automations.{AutomationCard}
 
+  def list_automations do
+    [
+      %{
+        id: 1,
+        from_logo: "/images/logos/slack.svg",
+        to_logo: "/images/logos/stripe.svg",
+        title: "Send Slack alerts for Stripe payments",
+        description: "Get instant Slack notifications whenever you receive a new Stripe payment.",
+        category: "financial",
+        button_text: "Activate",
+        steps: [
+          "Trigger: A new payment is received via Stripe.",
+          "Extract payment details (amount, customer, time).",
+          "Send a formatted message to the designated Slack channel."
+        ],
+        use_cases: [
+          "Notify your finance team of successful payments.",
+          "Monitor high-value transactions in real-time.",
+          "Alert customer success teams when premium accounts are activated."
+        ],
+        setup_time: "5–10 minutes"
+      },
+      %{
+        id: 2,
+        from_logo: "/images/logos/discord.svg",
+        to_logo: "/images/logos/mailchimp.svg",
+        title: "Notify Discord on Mailchimp campaigns",
+        description:
+          "Post updates to your Discord channel when a new Mailchimp campaign is sent.",
+        category: "marketing",
+        button_text: "Activate",
+        steps: [
+          "Trigger: A Mailchimp campaign is sent.",
+          "Retrieve campaign summary (subject, audience, time).",
+          "Post a formatted notification to a Discord channel."
+        ],
+        use_cases: [
+          "Keep your community updated on newsletters.",
+          "Announce promotional campaigns to internal teams.",
+          "Track campaign engagement in a shared channel."
+        ],
+        setup_time: "5–8 minutes"
+      },
+      %{
+        id: 3,
+        from_logo: "/images/logos/github.svg",
+        to_logo: "/images/logos/jira.svg",
+        title: "Create Jira tickets from GitHub issues",
+        description:
+          "Automatically create Jira tickets for new GitHub issues in your repository.",
+        category: "development",
+        button_text: "Activate",
+        steps: [
+          "Trigger: A new GitHub issue is created.",
+          "Extract issue title and description.",
+          "Create a corresponding ticket in Jira with mapped fields."
+        ],
+        use_cases: [
+          "Sync development tasks between platforms.",
+          "Ensure no issue is missed in sprint planning.",
+          "Centralize work tracking in Jira while using GitHub issues."
+        ],
+        setup_time: "7–12 minutes"
+      }
+    ]
+  end
+
+  def list_categories do
+    [
+      %{label: "All", value: "all"},
+      %{label: "Financial", value: "financial"},
+      %{label: "Marketing", value: "marketing"},
+      %{label: "Development", value: "development"},
+      %{label: "Project Management", value: "project management"},
+      %{label: "Productivity", value: "productivity"},
+      %{label: "Communication", value: "communication"},
+      %{label: "Data Management", value: "data management"},
+      %{label: "Social", value: "social"}
+    ]
+  end
+
+  def get_automation_by_id(id) do
+    Enum.find(list_automations(), fn automation -> automation.id == id end)
+  end
+
+  def get_automation_by_id!(id) do
+    case get_automation_by_id(id) do
+      nil -> raise "Automation with ID #{id} not found"
+      automation -> automation
+    end
+  end
+
   def mount(_params, _session, socket) do
     socket =
       socket
@@ -10,169 +102,30 @@ defmodule OttrWeb.Dashboard.Automations.AutomationLive do
         page_title: "Automation",
         page_title_suffix: " | Ottr",
         current_path: "/dashboard/automations",
-        categories: [
-          %{label: "All", value: "all"},
-          %{label: "Financial", value: "financial"},
-          %{label: "Marketing", value: "marketing"},
-          %{label: "Development", value: "development"},
-          %{label: "Project Management", value: "project management"},
-          %{label: "Productivity", value: "productivity"},
-          %{label: "Communication", value: "communication"},
-          %{label: "Data Management", value: "data management"},
-          %{label: "Social", value: "social"},
-
-        ],
-        automations: [
-          %{
-            from_logo: "/images/logos/slack.svg",
-            to_logo: "/images/logos/stripe.svg",
-            title: "Send Slack alerts for Stripe payments",
-            description:
-              "Get instant Slack notifications whenever you receive a new Stripe payment.",
-            category: "financial",
-            button_text: "Activate"
-          },
-          %{
-            from_logo: "/images/logos/discord.svg",
-            to_logo: "/images/logos/mailchimp.svg",
-            title: "Notify Discord on Mailchimp campaigns",
-            description:
-              "Post updates to your Discord channel when a new Mailchimp campaign is sent.",
-            category: "marketing",
-            button_text: "Activate"
-          },
-          %{
-            from_logo: "/images/logos/github.svg",
-            to_logo: "/images/logos/jira.svg",
-            title: "Create Jira tickets from GitHub issues",
-            description:
-              "Automatically create Jira tickets for new GitHub issues in your repository.",
-            category: "development",
-            button_text: "Activate"
-          },
-          %{
-            from_logo: "/images/logos/trello.svg",
-            to_logo: "/images/logos/asana.svg",
-            title: "Sync Trello cards to Asana tasks",
-            description:
-              "Keep your Trello boards and Asana projects in sync with automatic updates.",
-            category: "project management",
-            button_text: "Activate"
-          },
-          %{
-            from_logo: "/images/logos/slack.svg",
-            to_logo: "/images/logos/google-calendar.svg",
-            title: "Create Google Calendar events from Slack messages",
-            description:
-              "Turn important Slack messages into Google Calendar events with one click.",
-            category: "productivity",
-            button_text: "Activate"
-          },
-          %{
-            from_logo: "/images/logos/stripe.svg",
-            to_logo: "/images/logos/paypal.svg",
-            title: "Send PayPal invoices for Stripe payments",
-            description:
-              "Automatically generate PayPal invoices for every new Stripe payment received.",
-            category: "financial",
-            button_text: "Activate"
-          },
-          %{
-            from_logo: "/images/logos/mailchimp.svg",
-            to_logo: "/images/logos/salesforce.svg",
-            title: "Add Mailchimp subscribers to Salesforce",
-            description: "Sync new Mailchimp subscribers directly to your Salesforce contacts.",
-            category: "marketing",
-            button_text: "Activate"
-          },
-          %{
-            from_logo: "/images/logos/zoom.svg",
-            to_logo: "/images/logos/slack.svg",
-            title: "Post Zoom meeting summaries to Slack",
-            description: "Automatically share Zoom meeting summaries in your Slack channel.",
-            category: "communication",
-            button_text: "Activate"
-          },
-          %{
-            from_logo: "/images/logos/airtable.svg",
-            to_logo: "/images/logos/google-sheets.svg",
-            title: "Sync Airtable records to Google Sheets",
-            description: "Keep your Airtable data up-to-date in Google Sheets automatically.",
-            category: "data management",
-            button_text: "Activate"
-          },
-          %{
-            from_logo: "/images/logos/github.svg",
-            to_logo: "/images/logos/slack.svg",
-            title: "Notify Slack on GitHub pull requests",
-            description:
-              "Get instant Slack notifications for new GitHub pull requests in your repositories.",
-            category: "development",
-            button_text: "Activate"
-          },
-          %{
-            from_logo: "/images/logos/discord.svg",
-            to_logo: "/images/logos/google-drive.svg",
-            title: "Share Google Drive files in Discord",
-            description: "Automatically post Google Drive file links in your Discord channels.",
-            category: "communication",
-            button_text: "Activate"
-          },
-          %{
-            from_logo: "/images/logos/stripe.svg",
-            to_logo: "/images/logos/slack.svg",
-            title: "Send Stripe payment alerts to Slack",
-            description: "Receive real-time Slack notifications for every new Stripe payment.",
-            category: "financial",
-            button_text: "Activate"
-          },
-          %{
-            from_logo: "/images/logos/jira.svg",
-            to_logo: "/images/logos/confluence.svg",
-            title: "Create Confluence pages from Jira issues",
-            description: "Automatically generate Confluence pages for new Jira issues.",
-            category: "project management",
-            button_text: "Activate"
-          },
-          %{
-            from_logo: "/images/logos/trello.svg",
-            to_logo: "/images/logos/slack.svg",
-            title: "Post Trello card updates to Slack",
-            description: "Get notified in Slack whenever a Trello card is updated.",
-            category: "project management",
-            button_text: "Activate"
-          },
-          %{
-            from_logo: "/images/logos/mailchimp.svg",
-            to_logo: "/images/logos/slack.svg",
-            title: "Notify Slack on Mailchimp campaign sends",
-            description: "Receive Slack notifications when a new Mailchimp campaign is sent.",
-            category: "marketing",
-            button_text: "Activate"
-          },
-          %{
-            from_logo: "/images/logos/zoom.svg",
-            to_logo: "/images/logos/google-calendar.svg",
-            title: "Create Google Calendar events from Zoom meetings",
-            description:
-              "Automatically create Google Calendar events for scheduled Zoom meetings.",
-            category: "productivity",
-            button_text: "Activate"
-          },
-          %{
-            from_logo: "/images/logos/wordpress.svg",
-            to_logo: "/images/logos/instagram.svg",
-            title: "Auto-post new blog articles to instagram",
-            description:
-              "Automatically share your latest WordPress blog posts to your instagram feed.",
-            category: "social",
-            type: "social media",
-            button_text: "Activate"
-          }
-        ]
+        categories: list_categories(),
+        automations: list_automations(),
+        selected_automation: nil
       )
       |> assign(workflows: [])
 
     {:ok, socket}
+  end
+
+  def handle_params(%{"id" => id}, _uri, socket) do
+    automation = get_automation_by_id!(String.to_integer(id))
+    socket = assign(socket, :selected_automation, automation)
+    {:noreply, socket}
+  end
+
+  def handle_params(_params, _uri, socket) do
+    {:noreply, assign(socket, selected_automation: nil)}
+  end
+
+  def handle_event("show_automation", %{"id" => id}, socket) do
+    {:noreply, push_patch(socket, to: ~p"/dashboard/automations/#{id}")}
+  end
+
+  def handle_event("close_automation_modal", _params, socket) do
+    {:noreply, push_patch(socket, to: ~p"/dashboard/automations")}
   end
 end

@@ -52,7 +52,7 @@ defmodule OttrWeb.CoreComponents do
       data-cancel={JS.exec(@on_cancel, "phx-remove")}
       class="relative z-50 hidden"
     >
-      <div id={"#{@id}-bg"} class="bg-zinc-50/90 fixed inset-0 transition-opacity" aria-hidden="true" />
+      <div id={"#{@id}-bg"} class="bg-black/30 fixed inset-0 transition-opacity" aria-hidden="true" />
       <div
         class="fixed inset-0 overflow-y-auto"
         aria-labelledby={"#{@id}-title"}
@@ -68,7 +68,7 @@ defmodule OttrWeb.CoreComponents do
               phx-window-keydown={JS.exec("data-cancel", to: "##{@id}")}
               phx-key="escape"
               phx-click-away={JS.exec("data-cancel", to: "##{@id}")}
-              class="shadow-zinc-700/10 ring-zinc-700/10 relative hidden rounded-2xl bg-white p-14 shadow-lg ring-1 transition"
+              class="shadow-zinc-700/10 ring-zinc-700/10 relative hidden rounded-lg border-white/30 bg-white/80 backdrop-blur-md  p-14 shadow-lg ring-1 transition"
             >
               <div class="absolute top-6 right-5">
                 <button
@@ -392,7 +392,7 @@ defmodule OttrWeb.CoreComponents do
           ]}
           {@rest}
         />
-        
+
     <!-- Eye Toggle Button -->
         <button
           type="button"
@@ -417,7 +417,7 @@ defmodule OttrWeb.CoreComponents do
               d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7S3.732 16.057 2.458 12z"
             />
           </svg>
-          
+
     <!-- Show eye-off when shown -->
           <svg
             x-show="show"

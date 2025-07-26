@@ -1,0 +1,147 @@
+<div
+  class="w-full max-w-6xl mx-auto flex flex-col gap-10 pt-8 relative"
+  x-data="{ selectedCategory: 'all', searchTerm: '' }"
+>
+  <section class="flex flex-col items-center gap-4">
+    <h1 class="text-3xl md:text-4xl font-bold text-[#073127] tracking-tight text-center">
+      Discover Powerful Integrations
+    </h1>
+    
+    <p class="text-zinc-600 text-center max-w-2xl">
+      Browse and activate ready-made integrations to connect your favorite apps and automate workflows.
+    </p>
+    
+    <div class="w-full max-w-lg mt-4">
+      <div class="relative">
+        <input
+          type="text"
+          x-model="searchTerm"
+          placeholder="Search integrations (e.g. Slack, Instagram, CRM)..."
+          class="w-full pl-12 pr-4 py-3 border border-zinc-200 rounded-lg shadow-sm text-sm focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition"
+        />
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">
+          <Heroicons.magnifying_glass class="w-5 h-5" />
+        </span>
+      </div>
+    </div>
+  </section>
+  
+  <div class="flex gap-3 justify-start text-sm px-4 py-2 max-w-full flex-wrap">
+    <%= for category <- @categories do %>
+      <button
+        type="button"
+        class="px-4 py-2 rounded-full transition whitespace-nowrap"
+        x-bind:class={"selectedCategory === '#{String.downcase(category.value)}' ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'"}
+        @click={"selectedCategory = '#{String.downcase(category.value)}'"}
+      >
+        {category.label}
+      </button>
+    <% end %>
+  </div>
+  
+  <section>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <%= for integration <- @integrations do %>
+        <div
+          x-show={
+        """
+        (selectedCategory === 'all' || selectedCategory === '#{String.downcase(integration.category)}') &&
+        ('#{integration.name}' + ' #{integration.description}').toLowerCase().includes(searchTerm.toLowerCase())
+        """
+      }
+          x-transition
+          data-category={String.downcase(integration.category)}
+        >
+          <.integration_card
+            logo={integration.logo}
+            name={integration.name}
+            description={integration.description}
+            category={integration.category}
+            id={integration.id}
+          />
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="flex justify-center mt-10">
+      <button class="px-6 py-3 rounded-lg bg-zinc-100 text-zinc-700 font-medium hover:bg-zinc-200 transition">
+        Load More
+      </button>
+    </div>
+  </section>
+  <%= if @selected_integration do %>
+  <%= if @selected_integration do %>
+  <.modal id="integration-modal" show on_cancel={JS.push("close_integration_modal")}>
+    <div class="w-full flex flex-col gap-6">
+      <div class="flex items-center gap-4">
+        <img src={@selected_integration.logo} alt={@selected_integration.name} class="h-12 w-12 rounded bg-zinc-50 p-2 shadow" />
+        <div>
+          <h2 class="text-2xl font-bold text-[#073127] mb-1"><%= @selected_integration.name %></h2>
+          <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100/80 text-emerald-700 border border-emerald-200/60 mr-2">
+            <%= String.capitalize(@selected_integration.category || "General") %>
+          </span>
+          <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 border border-blue-200/60 mr-2">
+            <%= @selected_integration.status %>
+          </span>
+          <%= if @selected_integration.connected do %>
+            <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-600 text-white border border-emerald-700/60">
+              Connected
+            </span>
+          <% end %>
+        </div>
+      </div>
+      <p class="text-zinc-700 text-base leading-relaxed italic">
+        <%= @selected_integration.tagline %>
+      </p>
+      <p class="text-zinc-800 text-base leading-relaxed">
+        <%= @selected_integration.description %>
+      </p>
+      <div class="flex flex-wrap gap-4 text-xs text-zinc-500">
+        <span><strong>Automations:</strong> <%= @selected_integration.automations_count %></span>
+        <span><strong>Templates:</strong> <%= @selected_integration.templates_count %></span>
+        <span><strong>Last updated:</strong> <%= @selected_integration.last_updated %></span>
+        <span><strong>Author:</strong> <%= @selected_integration.author %></span>
+      </div>
+      <div>
+        <h3 class="font-semibold text-zinc-900 text-base mb-1">Features</h3>
+        <ul class="list-disc list-inside text-zinc-700 text-sm">
+          <%= for feature <- @selected_integration.features do %>
+            <li><%= feature %></li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex-1">
+          <h4 class="font-semibold text-zinc-800 text-sm mb-1">Triggers</h4>
+          <ul class="list-disc list-inside text-zinc-600 text-xs">
+            <%= for trig <- @selected_integration.triggers do %>
+              <li><%= trig %></li>
+            <% end %>
+          </ul>
+        </div>
+        <div class="flex-1">
+          <h4 class="font-semibold text-zinc-800 text-sm mb-1">Actions</h4>
+          <ul class="list-disc list-inside text-zinc-600 text-xs">
+            <%= for act <- @selected_integration.actions do %>
+              <li><%= act %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 mt-4">
+        <a href={@selected_integration.docs_url} class="text-emerald-700 underline text-sm" target="_blank">
+          View setup instructions
+        </a>
+        <%= if @selected_integration.connected do %>
+          <span class="text-emerald-600 text-xs font-semibold">Already connected</span>
+        <% else %>
+          <button class="px-4 py-2 rounded-lg bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition">
+            Connect
+          </button>
+        <% end %>
+      </div>
+    </div>
+  </.modal>
+<% end %>
+<% end %>
+</div>

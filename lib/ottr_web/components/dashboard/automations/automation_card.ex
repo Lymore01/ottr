@@ -7,6 +7,7 @@ defmodule OttrWeb.Dashboard.Automations.AutomationCard do
   attr :description, :string, required: true
   attr :category, :string, required: false
   attr :button_text, :string, default: "Activate"
+  attr :id, :integer, required: true
 
   def automation_card(assigns) do
     ~H"""
@@ -32,7 +33,10 @@ defmodule OttrWeb.Dashboard.Automations.AutomationCard do
         </p>
       </div>
 
-      <button class="mt-auto px-4 py-2 rounded-lg bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition">
+      <button class="mt-auto px-4 py-2 rounded-lg bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition"
+        phx-click="show_automation"
+        phx-value-id={@id}
+      >
         {@button_text}
       </button>
     </div>

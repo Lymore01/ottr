@@ -79,15 +79,15 @@ defmodule OttrWeb.Router do
   live_session :dashboard,
     layout: {OttrWeb.Layouts, :dashboard} do
     live "/dashboard", Dashboard.DashboardLive
-    live "/dashboard/automations", Dashboard.Automations.AutomationLive
-    live "/dashboard/automations/:id", Dashboard.AutomationLive
+    live "/dashboard/automations", Dashboard.Automations.AutomationLive, :index
+    live "/dashboard/automations/:id", Dashboard.Automations.AutomationLive, :show
     live "/dashboard/workflows", Dashboard.WorkflowsLive
     live "/dashboard/workflows/:id", Dashboard.WorkflowLive
     live "/dashboard/workflows/new", Dashboard.WorkflowLive, :new
-    live "/dashboard/integrations", Dashboard.IntegrationsLive
-    live "/dashboard/integrations/:id", Dashboard.IntegrationLive
-    live "/dashboard/templates", Dashboard.TemplatesLive
-    live "/dashboard/templates/:id", Dashboard.TemplateLive
+    live "/dashboard/integrations", Dashboard.Integrations.IntegrationLive, :index
+    live "/dashboard/integrations/:id", Dashboard.Integrations.IntegrationLive, :show
+    live "/dashboard/templates", Dashboard.Templates.TemplateLive, :index
+    live "/dashboard/templates/:id", Dashboard.Templates.TemplateLive, :show
     live "/dashboard/settings", Dashboard.SettingsLive
   end
 end

@@ -28,7 +28,7 @@ defmodule OttrWeb.Dashboard.Topbar do
     }"
       >
         <!-- Workflow Name -->
-        <%= if @current_path !== "/dashboard" do %>
+        <%= if not String.starts_with?(@current_path, "/dashboard") do %>
           <div class="flex items-center gap-2 relative">
             <div
               x-data="{
@@ -153,10 +153,14 @@ defmodule OttrWeb.Dashboard.Topbar do
             </template>
           </div>
         <% else %>
-        <div class="ml-4 flex">
-          <h1 class="text-md font-normal text-center text-zinc-600 tracking-tight">
-            Good Afternoon, <span class="font-bold text-zinc-700">Kelly Limo</span>
-          </h1>
+          <div class="ml-4 flex">
+            <h1 class="font-medium text-sm text-[#073127]">
+              {@current_path
+              |> String.split("/")
+              |> Enum.reject(&(&1 == ""))
+              |> List.last()
+              |> String.capitalize()}
+            </h1>
           </div>
         <% end %>
 

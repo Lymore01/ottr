@@ -9,7 +9,7 @@ defmodule OttrWeb.Landing.PricingModal do
       x-show="showPricingModal"
       x-transition
       @keydown.escape.window="showPricingModal = false"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
     >
       <div
         @click.away="showPricingModal = false"

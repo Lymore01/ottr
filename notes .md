@@ -195,7 +195,7 @@ Get all integration svgs and place it in priv/static/icons/*.svg - https://www.s
 
 <!-- Routes -->
 
-TODAY: Home /dashboard
+TODAY: Home /dashboard - DONE
 <!-- Dashboard -->
 /dashboard/automations
 /dashboard/automations/:id

@@ -69,10 +69,11 @@
   </div>
   
 <!-- Recent Workflows -->
+<%!-- todo: Add tooltip that explains what a burst is (burst) --%>
   <div class="w-full flex items-center justify-between mt-10">
-    <h2 class="text-lg font-semibold text-[#073127]">Your Recent Workflows</h2>
+    <h2 class="text-lg font-semibold text-[#073127]">Your Recent Bursts</h2>
     <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg text-sm font-medium shadow-sm">
-      + Create New Workflow
+      + Create New Burst
     </button>
   </div>
   <!-- Recent Workflows -->
@@ -111,66 +112,64 @@
 <!-- Popular Integrations -->
   <div class="w-full flex items-center justify-between mt-10">
     <h2 class="text-lg font-semibold text-[#073127]">Popular Integrations</h2>
-    <button
-      type="button"
-      class="text-xs text-blue-600 hover:underline font-medium flex items-center gap-1"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-4 w-4"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-      </svg>
-      More
-    </button>
+    <.more_button
+      navigate={~p"/dashboard/integrations"}
+      title="Browse all integrations"
+      aria-label="Browse all integrations"
+    />
   </div>
   <div class="flex gap-4 flex-wrap mt-4">
-    <div class="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm flex items-center gap-2">
+    <div
+      class="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm flex items-center gap-2"
+      title="slack"
+      aria-label="slack"
+    >
       <img src="/images/logos/slack.svg" alt="Slack" class="h-6 w-6" />
-      <span class="text-sm text-zinc-700">Slack</span>
     </div>
-    <div class="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm flex items-center gap-2">
+    <div
+      class="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm flex items-center gap-2"
+      title="notion"
+      aria-label="notion"
+    >
       <img src="/images/logos/notion.svg" alt="Notion" class="h-6 w-6" />
-      <span class="text-sm text-zinc-700">Notion</span>
     </div>
-    <div class="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm flex items-center gap-2">
+    <div
+      class="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm flex items-center gap-2"
+      title="google sheets"
+      aria-label="google sheets"
+    >
       <img src="/images/logos/google-sheets.svg" alt="Google Sheets" class="h-6 w-6" />
-      <span class="text-sm text-zinc-700">Google Sheets</span>
     </div>
-    <div class="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm flex items-center gap-2">
+    <div
+      class="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm flex items-center gap-2"
+      title="stripe"
+      aria-label="stripe"
+    >
       <img src="/images/logos/stripe.svg" alt="Stripe" class="h-6 w-6" />
-      <span class="text-sm text-zinc-700">Stripe</span>
     </div>
-    <div class="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm flex items-center gap-2">
+    <div
+      class="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm flex items-center gap-2"
+      title="tiktok"
+      aria-label="tiktok"
+    >
       <img src="/images/logos/tiktok.svg" alt="Stripe" class="h-6 w-6" />
-      <span class="text-sm text-zinc-700">TikTok</span>
     </div>
-    <div class="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm flex items-center gap-2">
+    <div
+      class="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm flex items-center gap-2"
+      title="youtube"
+      aria-label="youtube"
+    >
       <img src="/images/logos/youtube.svg" alt="Stripe" class="h-6 w-6" />
-      <span class="text-sm text-zinc-700">Youtube</span>
     </div>
   </div>
 
   <div class="w-full flex items-center justify-between mt-10">
     <h2 class="text-lg font-semibold text-[#073127]">Browse Templates</h2>
-    <button
-      type="button"
-      class="text-xs text-blue-600 hover:underline font-medium flex items-center gap-1"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-4 w-4"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-      </svg>
-      More
-    </button>
+    <.more_button
+      navigate={~p"/dashboard/templates"}
+      title="Browse all templates"
+      aria-label="Browse all templates"
+    />
   </div>
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-zinc-700 pb-10">
     <!-- Instagram Scheduler -->

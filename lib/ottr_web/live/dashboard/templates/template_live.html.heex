@@ -1,0 +1,123 @@
+<div
+  x-data="{
+        selectedCategory: 'all',
+        searchTerm: ''
+    }"
+  class="w-full max-w-6xl mx-auto flex flex-col gap-10 pt-8 relative"
+>
+  <section class="flex flex-col items-center gap-4">
+    <h1 class="text-3xl md:text-4xl font-bold text-[#073127] tracking-tight text-center">
+      Discover Powerful Templates
+    </h1>
+    
+    <p class="text-zinc-600 text-center max-w-2xl">
+      Browse and activate ready-made templates to streamline your workflow and enhance productivity.
+    </p>
+    
+    <div class="w-full max-w-lg mt-4">
+      <div class="relative">
+        <input
+          type="text"
+          x-model="searchTerm"
+          placeholder="Search templates (e.g. Slack, Instagram, CRM)..."
+          class="w-full pl-12 pr-4 py-3 border border-zinc-200 rounded-lg shadow-sm text-sm focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition"
+        />
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">
+          <Heroicons.magnifying_glass class="w-5 h-5" />
+        </span>
+      </div>
+    </div>
+     <%!-- categories --%>
+    <div class="flex gap-3 justify-start text-sm px-4 py-2 max-w-full flex-wrap">
+      <%= for category <- @categories do %>
+        <button
+          type="button"
+          class="px-4 py-2 rounded-full transition whitespace-nowrap"
+          x-bind:class={"selectedCategory === '#{String.downcase(category.value)}' ? 'bg-blue-100 text-blue-700 hover:bg-blue-200' : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'"}
+          @click={"selectedCategory = '#{String.downcase(category.value)}'"}
+        >
+          {category.label}
+        </button>
+      <% end %>
+    </div>
+    
+    <section>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <%= for template <- @templates do %>
+          <div
+            x-show={
+            """
+            (selectedCategory === 'all' || selectedCategory === '#{String.downcase(template.category)}') &&
+            ('#{template.title}' + ' #{template.description}').toLowerCase().includes(searchTerm.toLowerCase())
+            """
+        }
+            x-transition
+            data-category={String.downcase(template.category)}
+          >
+            <.template_card
+              logo={template.logo}
+              title={template.title}
+              description={template.description}
+              category={template.category}
+              id={template.id}
+            />
+          </div>
+        <% end %>
+      </div>
+    </section>
+  </section>
+   <%!-- modal --%>
+  <%= if @selected_template do %>
+    <.modal id="template-modal" show on_cancel={JS.push("close_modal")}>
+      <div class="w-full flex flex-col gap-6">
+        <div class="flex items-center gap-4">
+          <img
+            src={@selected_template.logo}
+            alt="Logo"
+            class="h-12 w-12 rounded bg-blue-50 p-2 shadow"
+          />
+          <div class="flex flex-col items-start justify-center">
+            <h2 class="text-2xl font-bold text-zinc-900 mb-1">{@selected_template.title}</h2>
+            
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-blue-100/80 text-blue-700 border border-blue-200/60">
+              {String.capitalize(@selected_template.category || "General")}
+            </span>
+          </div>
+        </div>
+        
+        <p class="text-zinc-800 text-base leading-relaxed">
+          {@selected_template.description}
+        </p>
+        
+        <%= if @selected_template.steps do %>
+          <div class="flex flex-col gap-2">
+            <h3 class="font-semibold text-zinc-900 text-base">How it works:</h3>
+            
+            <ul class="list-disc list-inside text-zinc-700 text-sm">
+              <%= for step <- @selected_template.steps do %>
+                <li>{step}</li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+        
+        <div class="flex flex-col md:flex-row gap-3 mt-4">
+          <button
+            phx-click="use_template"
+            phx-value-id={@selected_template.id}
+            class="flex-1 px-4 py-2 rounded-lg bg-blue-600/90 text-white font-medium hover:bg-blue-700/90 transition shadow"
+          >
+            Continue
+          </button>
+          
+          <button
+            phx-click="close_modal"
+            class="flex-1 px-4 py-2 rounded-lg bg-white/60 text-zinc-700 font-medium hover:bg-zinc-200/80 transition border border-zinc-200"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </.modal>
+  <% end %>
+</div>

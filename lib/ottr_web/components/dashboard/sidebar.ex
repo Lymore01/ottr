@@ -100,6 +100,8 @@ defmodule OttrWeb.Dashboard.Sidebar do
                   <Heroicons.fire class="w-5 h-5 shrink-0" />
                 <% :puzzle_piece -> %>
                   <Heroicons.puzzle_piece class="w-5 h-5 shrink-0" />
+                <% :sparkles -> %>
+                  <Heroicons.sparkles class="w-5 h-5 shrink-0" />
                 <% :cog_6_tooth -> %>
                   <Heroicons.cog_6_tooth class="w-5 h-5 shrink-0" />
                 <% :document -> %>

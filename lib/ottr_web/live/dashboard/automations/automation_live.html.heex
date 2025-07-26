@@ -1,5 +1,5 @@
 <div
-  class="w-full max-w-6xl mx-auto flex flex-col gap-10 pt-8"
+  class="w-full max-w-6xl mx-auto flex flex-col gap-10 pt-8 relative"
   x-data="{ selectedCategory: 'all', searchTerm: '' }"
 >
   <section class="flex flex-col items-center gap-4">
@@ -60,6 +60,7 @@
             title={automation.title}
             category={automation.category}
             description={automation.description}
+            id={automation.id}
           />
         </div>
       <% end %>
@@ -83,4 +84,83 @@
       </button>
     </div>
   </section>
+  
+  <%= if @selected_automation do %>
+    <.modal id="automation-modal" show on_cancel={JS.push("close_automation_modal")}>
+      <div class="w-full flex flex-col gap-6">
+        <div class="flex items-center gap-4">
+          <img
+            src={@selected_automation.from_logo}
+            alt="From"
+            class="h-10 w-10 rounded bg-emerald-50 p-2 shadow"
+          /> <Heroicons.arrow_right class="w-5 h-5 text-zinc-400" />
+          <img
+            src={@selected_automation.to_logo}
+            alt="To"
+            class="h-10 w-10 rounded bg-emerald-50 p-2 shadow"
+          />
+          <span class="ml-auto px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100/80 text-emerald-700 border border-emerald-200/60">
+            {String.capitalize(@selected_automation.category || "General")}
+          </span>
+        </div>
+        
+        <h2 class="text-2xl font-bold text-[#073127] mb-1">{@selected_automation.title}</h2>
+        
+        <p class="text-zinc-800 text-base leading-relaxed">
+          {@selected_automation.description}
+        </p>
+        
+        <%= if @selected_automation.use_cases do %>
+          <div class="mt-4">
+            <h3 class="font-semibold text-zinc-900 text-base mb-1">Use Cases:</h3>
+            
+            <ul class="list-disc list-inside text-zinc-700 italic text-sm">
+              <%= for use_case <- @selected_automation.use_cases do %>
+                <li>{use_case}</li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+        
+        <%= if @selected_automation.steps do %>
+          <div>
+            <h3 class="font-semibold text-zinc-900 text-base mb-1">How it works:</h3>
+            
+            <ul class="list-disc list-inside text-zinc-700 text-sm">
+              <%= for step <- @selected_automation.steps do %>
+                <li>{step}</li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+        
+        <div class="flex items-center gap-3 mt-2">
+          <span class="text-xs text-zinc-400">{@selected_automation.setup_time}</span>
+          <a
+            href={"/docs/automations/'#{@selected_automation.id}'"}
+            class="text-xs text-emerald-700 underline hover:text-emerald-900"
+          >
+            Learn more
+          </a>
+        </div>
+        
+        <div class="flex flex-col md:flex-row gap-3 mt-4">
+          <button
+            phx-click="activate_automation"
+            phx-value-id={@selected_automation.id}
+            class="flex-1 px-4 py-2 rounded-lg bg-emerald-600/90 text-white font-medium hover:bg-emerald-700/90 transition shadow"
+          >
+            Continue
+          </button>
+          
+          <button
+            phx-click="close_automation_modal"
+            class="flex-1 px-4 py-2 rounded-lg bg-white/60 text-zinc-700 font-medium hover:bg-zinc-200/80 transition border border-zinc-200"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </.modal>
+  <% end %>
 </div>
