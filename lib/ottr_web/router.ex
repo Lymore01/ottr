@@ -81,8 +81,8 @@ defmodule OttrWeb.Router do
     live "/dashboard", Dashboard.DashboardLive
     live "/dashboard/automations", Dashboard.Automations.AutomationLive, :index
     live "/dashboard/automations/:id", Dashboard.Automations.AutomationLive, :show
-    live "/dashboard/workflows", Dashboard.WorkflowsLive
-    live "/dashboard/workflows/:id", Dashboard.WorkflowLive
+    live "/dashboard/workflows", Dashboard.Workflows.WorkflowLive, :index
+    live "/dashboard/workflows/:id", Dashboard.Workflows.Playground.PlaygroundLive
     live "/dashboard/workflows/new", Dashboard.WorkflowLive, :new
     live "/dashboard/integrations", Dashboard.Integrations.IntegrationLive, :index
     live "/dashboard/integrations/:id", Dashboard.Integrations.IntegrationLive, :show

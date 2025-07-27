@@ -1,0 +1,91 @@
+<div
+  x-data="{
+    selectedCategory: 'all',
+    selectedTools: [],
+  }"
+  class="w-full max-w-6xl mx-auto flex flex-col gap-10 relative"
+>
+  <!-- Header Section -->
+  <section class="flex flex-col items-start gap-4">
+    <div class="flex justify-between w-full items-center">
+      <div class="flex flex-col items-start">
+        <h1 class="text-2xl font-bold text-[#073127] tracking-tight">
+          Burst History
+        </h1>
+      </div>
+      
+      <div
+        class="w-full max-w-lg ml-auto"
+        x-data="{ isLoading: false }"
+        @loading:start.window="isLoading = true"
+        @loading:stop.window="isLoading = false"
+      >
+        <form>
+          <div class="relative">
+            <input
+              id="search-form"
+              type="text"
+              name="search_term"
+              phx-debounce="500"
+              phx-change="search"
+              phx-hook="SearchLoader"
+              placeholder="Search bursts (e.g. slack bot setup)..."
+              class="w-full pl-12 pr-4 py-3 border border-zinc-200 rounded-lg shadow-sm text-sm focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition"
+            />
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">
+              <Heroicons.magnifying_glass class="w-5 h-5" />
+            </span>
+            
+            <template x-if="isLoading">
+              <div class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4">
+                <div class="relative h-4 w-4">
+                  <div
+                    class="absolute inset-0 z-10 h-4 w-4 border-2 border-t-emerald-600 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"
+                    aria-label="Loading"
+                    role="status"
+                  >
+                  </div>
+                  
+                  <div class="absolute inset-0 h-4 w-4 border-2 border-zinc-300 rounded-full">
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+  
+  <.live_component
+    module={OttrWeb.Ui.FilterComponent}
+    id="workflow_filters"
+    categories={@categories}
+    tools={@available_tools}
+    selected_category={@selected_category}
+    selected_date={@selected_date}
+    selected_tools={@selected_tools}
+    search_term={@search_term}
+    patch={~p"/dashboard/workflows"}
+  />
+  
+<!-- Workflows List -->
+  <ul class="mt-4 space-y-2">
+    <%= if @workflows == [] do %>
+      <li class="text-zinc-500 text-center py-8 text-sm">
+        No workflows found matching your criteria.
+      </li>
+    <% end %>
+    
+    <%= for workflow <- @workflows do %>
+      <.workflow_card
+        id={to_string(workflow.id)}
+        title={workflow.title}
+        category={workflow.category}
+        modified_at={workflow.modified_at}
+        tools={workflow.tools}
+        navigate={~p"/dashboard/workflows/#{workflow.id}"}
+      />
+    <% end %>
+  </ul>
+</div>

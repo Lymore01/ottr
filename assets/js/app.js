@@ -84,11 +84,28 @@ Alpine.data("topbarToggle", () => ({
   },
 }));
 
+let Hooks = {}
+
+Hooks.SearchLoader = {
+  mounted() {
+    this.el.addEventListener("input", () => {
+      window.dispatchEvent(new CustomEvent("loading:start"));
+    });
+
+    this.handleEvent("search_done", () => {
+      window.dispatchEvent(new CustomEvent("loading:stop"));
+    });
+  }
+};
+
+
+
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
   .getAttribute("content");
 let liveSocket = new LiveSocket("/live", Socket, {
+  hooks: Hooks,
   longPollFallbackMs: 2500,
   params: { _csrf_token: csrfToken },
   dom: {

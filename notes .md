@@ -197,16 +197,16 @@ Get all integration svgs and place it in priv/static/icons/*.svg - https://www.s
 
 TODAY: Home /dashboard - DONE
 <!-- Dashboard -->
-/dashboard/automations
-/dashboard/automations/:id
-/dashboard/workflows
+/dashboard/automations - DONE
+/dashboard/automations/:id - DONE
+/dashboard/workflows - DONE
 /dashboard/workflows/:id
 /dashboard/workflows/:new
-/dashboard/integrations
-/dashboard/integrations/:id
-/dashboard/templates
-/dashboard/templates/:id
-/dashboard/settings
+/dashboard/integrations - DONE
+/dashboard/integrations/:id - DONE
+/dashboard/templates - DONE
+/dashboard/templates/:id - DONE
+/dashboard/settings 
 
 
 

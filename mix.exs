@@ -57,7 +57,8 @@ defmodule Ottr.MixProject do
       {:mox, "~> 1.2"},
       {:httpoison, "~> 2.2"},
       {:pbkdf2_elixir, "~> 2.3"},
-      {:heroicons, "~> 0.5.6"}
+      {:heroicons, "~> 0.5.6"},
+      {:timex, "~> 3.7"}
     ]
   end
 
