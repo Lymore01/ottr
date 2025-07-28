@@ -1,6 +1,10 @@
 <.flash_group flash={@flash} />
 <main class="w-screen h-screen overflow-hidden flex text-zinc-800 relative" x-data="sidebarToggle">
-  <.topbar workflows={@workflows} current_path={@current_path} />
+  <%= if String.starts_with?(@current_path, "/dashboard/workflows/") &&
+         String.ends_with?(@current_path, "/playground") do %>
+    <.dot_gradient />
+  <% end %>
+   <.topbar workflows={@workflows} current_path={@current_path} />
   <.sidebar mode="collapsed" current_path={@current_path} />
   <div
     class="relative flex transition-all duration-300 ease-in-out mt-16 w-full overflow-auto p-10 "

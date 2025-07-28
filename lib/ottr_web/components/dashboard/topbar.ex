@@ -28,8 +28,8 @@ defmodule OttrWeb.Dashboard.Topbar do
     }"
       >
         <!-- Workflow Name -->
-        <%= if not String.starts_with?(@current_path, "/dashboard") do %>
-          <div class="flex items-center gap-2 relative">
+        <%= if String.starts_with?(@current_path, "/dashboard") && String.ends_with?(@current_path, "/playground") do %>
+          <div class="flex items-center gap-2 relative ml-4">
             <div
               x-data="{
       editing: false,
@@ -166,7 +166,7 @@ defmodule OttrWeb.Dashboard.Topbar do
 
         <div class="flex gap-4 items-center">
           <div class="relative flex gap-2 p-1 border border-border rounded-full transition-colors duration-200">
-            <button class="py-1 px-2 rounded-full text-xs border border-border cursor-pointer bg-zinc-200 hover:bg-[#004838] hover:text-[#E2FB6C]">
+            <button class="py-1 px-2 rounded-full text-xs border border-border cursor-pointer bg-zinc-200 hover:bg-emerald-700 hover:text-white">
               Feedback
             </button>
             <div class="flex items-center px-1">

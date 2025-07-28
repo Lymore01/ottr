@@ -1,7 +1,9 @@
 defmodule OttrWeb.Dashboard.Workflows.Playground.PlaygroundLive do
   use OttrWeb, :live_view
 
-  def mount(_params, _session, socket) do
+  import OttrWeb.Dashboard.Playground
+
+  def mount(%{"id" => id} = _params, _session, socket) do
     socket =
       socket
       |> assign(:page_title, "Playground")
@@ -9,7 +11,7 @@ defmodule OttrWeb.Dashboard.Workflows.Playground.PlaygroundLive do
       |> assign(
         page_title: "Playground",
         page_title_suffix: " | Ottr",
-        current_path: "/dashboard/workflows"
+        current_path: ~p"/dashboard/workflows/#{id}/playground"
       )
 
     {:ok, socket}

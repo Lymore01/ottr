@@ -6,7 +6,7 @@ defmodule OttrWeb.Ui.DotGradient do
   def dot_gradient(assigns) do
     ~H"""
     <div
-      class="absolute top-0 left-0 w-full h-full z-0"
+      class="absolute top-0 left-0 w-full h-full z-0 pointer-events-none"
       style="
     background-image:
       radial-gradient(circle, rgba(0, 0, 0, 0.15) 1px, transparent 1px),

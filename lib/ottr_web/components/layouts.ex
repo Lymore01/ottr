@@ -10,6 +10,7 @@ defmodule OttrWeb.Layouts do
   """
   use OttrWeb, :html
   import OttrWeb.Dashboard.{Sidebar, Topbar}
+  import OttrWeb.Ui.DotGradient
 
   embed_templates "layouts/*"
 end
