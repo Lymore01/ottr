@@ -21,6 +21,29 @@ module.exports = {
           "0%": { transform: "translateX(0%)" },
           "100%": { transform: "translateX(50%)" },
         },
+        dash: {
+          to: {
+            strokeDashoffset: "-10",
+          },
+        },
+        "pulse-connection": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.7" },
+        },
+        "loading-dash": {
+          "0%": {
+            strokeDasharray: "1,200",
+            strokeDashoffset: "0",
+          },
+          "50%": {
+            strokeDasharray: "89,200",
+            strokeDashoffset: "-35px",
+          },
+          "100%": {
+            strokeDasharray: "89,200",
+            strokeDashoffset: "-124px",
+          },
+        },
       },
       animation: {
         "float-slow": "float 6s ease-in-out infinite",
@@ -28,6 +51,9 @@ module.exports = {
         "float-fast": "float 3s ease-in-out infinite",
         marquee: "marquee 25s linear infinite",
         "marquee-reverse": "marquee-reverse 30s linear infinite",
+        dash: "dash 1s linear infinite",
+        "pulse-connection": "pulse-connection 2s infinite",
+        "loading-dash": "loading-dash 1.5s ease-in-out infinite",
       },
       colors: {
         brand: "var(--brand)",
@@ -152,5 +178,5 @@ module.exports = {
     //     { values }
     //   )
     // })
-  ]
+  ],
 };

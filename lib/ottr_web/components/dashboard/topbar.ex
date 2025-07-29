@@ -33,7 +33,7 @@ defmodule OttrWeb.Dashboard.Topbar do
             <div
               x-data="{
       editing: false,
-      name: 'Community Engagement Workflow',
+      name: 'Slack Notifications Workflow',
       tempName: ''
     }"
               class="flex items-center gap-2 relative"
