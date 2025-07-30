@@ -5,7 +5,6 @@ defmodule OttrWeb.Dashboard.Playground do
 
   import OttrWeb.Dashboard.Playground.{BurstNode}
 
-
   def connection_line(assigns) do
     ~H"""
     <div class="z-[300] absolute top-0 left-0 w-full h-full pointer-events-none">
@@ -13,23 +12,22 @@ defmodule OttrWeb.Dashboard.Playground do
         <defs>
           <marker
             id="arrow"
-            markerWidth="8"
-            markerHeight="8"
-            refX="7"
-            refY="3"
+            markerWidth="4"
+            markerHeight="5"
+            refX="6"
+            refY="2.5"
             orient="auto"
             markerUnits="strokeWidth"
           >
             <path d="M0,0 L0,6 L8,3 z" fill="#2563eb" />
           </marker>
 
-
           <marker
             id="arrow-gray"
-            markerWidth="8"
-            markerHeight="8"
-            refX="7"
-            refY="3"
+            markerWidth="4"
+            markerHeight="5"
+            refX="6"
+            refY="2.5"
             orient="auto"
             markerUnits="strokeWidth"
           >
@@ -38,10 +36,10 @@ defmodule OttrWeb.Dashboard.Playground do
 
           <marker
             id="arrow-green"
-            markerWidth="8"
-            markerHeight="8"
-            refX="7"
-            refY="3"
+            markerWidth="4"
+            markerHeight="5"
+            refX="6"
+            refY="2.5"
             orient="auto"
             markerUnits="strokeWidth"
           >
@@ -50,10 +48,10 @@ defmodule OttrWeb.Dashboard.Playground do
 
           <marker
             id="arrow-red"
-            markerWidth="8"
-            markerHeight="8"
-            refX="7"
-            refY="3"
+            markerWidth="4"
+            markerHeight="5"
+            refX="6"
+            refY="2.5"
             orient="auto"
             markerUnits="strokeWidth"
           >
@@ -62,10 +60,10 @@ defmodule OttrWeb.Dashboard.Playground do
 
           <marker
             id="arrow-purple"
-            markerWidth="8"
-            markerHeight="8"
-            refX="7"
-            refY="3"
+            markerWidth="4"
+            markerHeight="5"
+            refX="6"
+            refY="2.5"
             orient="auto"
             markerUnits="strokeWidth"
           >

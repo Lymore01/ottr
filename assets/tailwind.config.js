@@ -103,6 +103,11 @@ module.exports = {
         lexend: ["var(--font-lexend)", ...defaultTheme.fontFamily.sans],
         inter: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
       },
+      dropShadow: {
+        'connection': '0 0 6px rgba(37, 99, 235, 0.4)',
+        'connection-hover': '0 0 8px rgba(37, 99, 235, 0.6)',
+        'flow': '0 0 3px rgba(96, 165, 250, 0.6)',
+      },
     },
   },
   plugins: [
@@ -130,6 +135,33 @@ module.exports = {
         ".phx-change-loading &",
       ])
     ),
+
+    // Custom plugin for connection styles
+    plugin(function({ addUtilities, addComponents }) {
+      addUtilities({
+        '.pointer-events-stroke': {
+          'pointer-events': 'stroke',
+        },
+      });
+
+      addComponents({
+        '.connection-source': {
+          'box-shadow': '0 0 0 2px #2563eb !important',
+          'transform': 'scale(1.02)',
+          'transition': 'all 0.2s ease',
+        },
+        '.connection-target': {
+          'box-shadow': '0 0 0 2px #22c55e !important',
+          'transform': 'scale(1.02)',
+          'transition': 'all 0.2s ease',
+        },
+        '.connection-selected': {
+          'stroke-width': '4 !important',
+          'filter': 'drop-shadow(0 0 8px rgba(37, 99, 235, 0.6)) !important',
+          'animation': 'pulse-connection 2s infinite',
+        },
+      });
+    }),
 
     // Embeds Heroicons (https://heroicons.com) into your app.css bundle
     // See your `CoreComponents.icon/1` for more information.

@@ -9,6 +9,9 @@ defmodule OttrWeb.Dashboard.Playground.BurstNode do
         "absolute top-1/2 transform -translate-y-1/2 w-4 h-4 bg-blue-500 border-2 border-white shadow-md rounded-full cursor-pointer connector-port " <>
         if @port == "input", do: "left-[-8px]", else: "right-[-8px]"
       }
+      x-bind:class={
+    "errorPorts.some(p => p.nodeId === '#{@node_id}' && p.portType === '#{@port}') ? 'error' : ''"
+    }
       data-node-id={@node_id}
       data-port-type={@port}
       x-on:mousedown.stop={"startConnection('#{@node_id}', '#{@port}')"}
@@ -46,8 +49,8 @@ defmodule OttrWeb.Dashboard.Playground.BurstNode do
     >
       <div class="flex justify-between items-center mb-2">
         <div class="flex items-center gap-2 font-medium text-gray-800">
-          <img src={"/images/logos/#{@node.icon || "default.svg"}"} alt="Icon" class="h-5 w-5" />
-          {@node.title || "Untitled Node"}
+          <img src={"/images/logos/#{@node.icon || "default.svg"}"} alt="Icon" class="h-5 w-5" /> {@node.title ||
+            "Untitled Node"}
         </div>
 
         <button class="text-gray-300 hover:text-gray-500 transition-colors">
@@ -78,8 +81,7 @@ defmodule OttrWeb.Dashboard.Playground.BurstNode do
           </div>
         <% end %>
       </div>
-
-      <.node_connector title="Input Port" port="input" node_id={@node.id} />
+       <.node_connector title="Input Port" port="input" node_id={@node.id} />
       <.node_connector title="Output Port" port="output" node_id={@node.id} />
     </div>
     """

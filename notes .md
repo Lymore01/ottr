@@ -209,6 +209,11 @@ TODAY: Home /dashboard - DONE
 /dashboard/settings 
 
 
+<!-- Today -->
+Make the entire playground panable and zoomable
+ensure a user can highlight, hover and delete connectors - DONE
+
+
 
 
 

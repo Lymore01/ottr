@@ -215,4 +215,30 @@ body {
 }
 
 /* Burst Connectors */
+.workflow-node.dragging {
+  user-select: none;
+  cursor: grabbing !important;
+}
+
+.workflow-node.dragging * {
+  pointer-events: none;
+}
+
+.connection:hover {
+  filter: drop-shadow(0 0 6px rgba(37, 99, 235, 0.4)) !important;
+}
+
+.connector-port[data-port-type="input"]:hover {
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.4) !important;
+}
+
+.connector-port[data-port-type="output"]:hover {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4) !important;
+}
+
+.connector-port.error {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.6) !important;
+  border-color: red !important;
+  background-color: rgba(239, 68, 68, 0.1) !important;
+}
 
