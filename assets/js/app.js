@@ -84,6 +84,43 @@ Alpine.data("topbarToggle", () => ({
   },
 }));
 
+Alpine.data("toggleNodeActions", () => ({
+  open: false,
+  height: 0,
+  distanceFromTop: 0,
+  position: "top",
+
+  init() {
+    this.$watch("open", async (value) => {
+      if (value) {
+        await Alpine.nextTick();
+        this.height = this.$refs.actions.offsetHeight;
+        this.calculateDistanceFromTheTop();
+
+        const threshold = 20;
+        if (this.distanceFromTop < this.height + threshold) {
+          this.position = "bottom";
+        } else {
+          this.position = "top";
+        }
+
+        console.log("→ Opened at position:", this.position);
+      } else {
+        console.log("→ Closed");
+      }
+    });
+  },
+
+  calculateDistanceFromTheTop() {
+    const rect = this.$refs.actions.getBoundingClientRect();
+    this.distanceFromTop = rect.top + window.scrollY;
+  },
+
+  toggle() {
+    this.open = !this.open;
+  },
+}));
+
 playground();
 
 let Hooks = {};

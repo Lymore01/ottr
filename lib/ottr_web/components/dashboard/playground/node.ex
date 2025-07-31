@@ -1,5 +1,6 @@
 defmodule OttrWeb.Dashboard.Playground.BurstNode do
   use Phoenix.Component
+  import OttrWeb.Dashboard.Playground.NodeActions
 
   # Connector Port
   def node_connector(assigns) do
@@ -41,21 +42,30 @@ defmodule OttrWeb.Dashboard.Playground.BurstNode do
     ~H"""
     <div
       id={@id}
+      x-data="{ isActive: false }"
       x-on:mousedown={"startDrag('#{@node.id}', $event)"}
       x-on:mouseup.window="stopDrag"
       x-on:mousemove.window="onDrag($event)"
       x-bind:style={"{ transform: `translate(${getNodePosition('" <> @node.id <> "').x}px, ${getNodePosition('" <> @node.id <> "').y}px)` }"}
       class={"workflow-node absolute w-64 rounded-xl shadow-sm p-4 text-sm hover:shadow-md transition-shadow duration-200 group cursor-grab select-none border #{@type_class}"}
+      x-ref="burst_node"
+      @close-node-sheet.window="isActive = false"
+      @dblclick={"
+    isActive = true;
+    $dispatch('open-node-sheet', {
+    nodeId: '#{@node.id}',
+    nodeType: '#{@node.category}',
+    nodeData: { url: 'https://api.example.com', method: 'GET' }
+    });
+    "}
+      x-bind:class="isActive ? 'bg-emerald-100 border-emerald-400 ring-2 ring-emerald-500 shadow-md scale-[1.02]' : ''"
     >
       <div class="flex justify-between items-center mb-2">
         <div class="flex items-center gap-2 font-medium text-gray-800">
           <img src={"/images/logos/#{@node.icon || "default.svg"}"} alt="Icon" class="h-5 w-5" /> {@node.title ||
             "Untitled Node"}
         </div>
-
-        <button class="text-gray-300 hover:text-gray-500 transition-colors">
-          <Heroicons.ellipsis_horizontal class="w-5 h-5 text-zinc-600" />
-        </button>
+         <.node_actions />
       </div>
 
       <%= if @node.type == "transform" do %>

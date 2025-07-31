@@ -2,6 +2,7 @@ defmodule OttrWeb.Dashboard.Workflows.Playground.PlaygroundLive do
   use OttrWeb, :live_view
 
   import OttrWeb.Dashboard.Playground
+  import OttrWeb.Dashboard.Playground.ConfigPanel
 
   def mount(%{"id" => id} = _params, _session, socket) do
     socket =
@@ -18,6 +19,7 @@ defmodule OttrWeb.Dashboard.Workflows.Playground.PlaygroundLive do
           %{
             id: "node-1",
             type: "action",
+            category: "email",
             title: "Send Email",
             description: "Dispatches an email to a given address",
             placeholder: "e.g. tralala@brainrot.com",
@@ -66,6 +68,7 @@ defmodule OttrWeb.Dashboard.Workflows.Playground.PlaygroundLive do
           %{
             id: "node-2",
             type: "transform",
+            category: "transform",
             title: "Format Name",
             description: "Capitalizes and trims user name input",
             placeholder: "e.g. john doe → John Doe",
@@ -114,6 +117,7 @@ defmodule OttrWeb.Dashboard.Workflows.Playground.PlaygroundLive do
           %{
             id: "node-3",
             type: "action",
+            category: "slack",
             title: "Send Slack Message",
             description: "Posts a message to a Slack channel",
             placeholder: "#general",
@@ -161,6 +165,7 @@ defmodule OttrWeb.Dashboard.Workflows.Playground.PlaygroundLive do
           %{
             id: "node-4",
             type: "action",
+            category: "github",
             title: "Create GitHub Issue",
             description: "Opens a new issue in a specified GitHub repository",
             placeholder: "Repo: octocat/hello-world",

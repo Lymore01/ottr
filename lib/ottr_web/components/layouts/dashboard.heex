@@ -3,6 +3,7 @@
   <%= if String.starts_with?(@current_path, "/dashboard/workflows/") &&
          String.ends_with?(@current_path, "/playground") do %>
     <.dot_gradient />
+    
     <div class="w-full h-full" x-init="setMode('collapsed')"> 
       {@inner_content}
     </div>
