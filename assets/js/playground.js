@@ -20,8 +20,19 @@ const playground = () => {
         panOnlyWhenZoomed: false,
         smoothScroll: false,
         startScale: 1,
+        cursor: "grab",
+        disablePan: false,
+        disableZoom: false,
+        excludeClass: "workflow-node",
+        beforeMouseDown: (e) => {
+          const isDraggingNode = e.target.closest(".workflow-node");
+          console.log(isDraggingNode)
+          const ctrlPressed = e.ctrlKey || e.metaKey;
+
+          if (!ctrlPressed || isDraggingNode) return false;
+          return true;
+        },
       });
-      this.panzoomInstance.excludeClass = 'draggable';
 
       container.parentElement.addEventListener("wheel", (event) => {
         if (event.ctrlKey || event.metaKey) {
@@ -30,6 +41,8 @@ const playground = () => {
           this.panzoomInstance.zoomWithWheel(event, delta);
         }
       });
+
+      console.log(this.panzoomInstance);
     },
 
     init() {

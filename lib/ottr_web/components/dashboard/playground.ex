@@ -99,6 +99,8 @@ defmodule OttrWeb.Dashboard.Playground do
         : 'translateX(60px) translateY(60px)'
     }"
       x-data={"workflowPlayground(#{Jason.encode!(@nodes)})"}
+      x-ref="pannableContainer"
+      x-init="() => initPanzoom($refs.pannableContainer)"
     >
       <div class="relative w-full h-full p-6 overflow-auto">
         <.connection_line />

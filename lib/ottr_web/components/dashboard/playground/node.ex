@@ -11,8 +11,8 @@ defmodule OttrWeb.Dashboard.Playground.BurstNode do
         if @port == "input", do: "left-[-8px]", else: "right-[-8px]"
       }
       x-bind:class={
-    "errorPorts.some(p => p.nodeId === '#{@node_id}' && p.portType === '#{@port}') ? 'error' : ''"
-    }
+        "errorPorts.some(p => p.nodeId === '#{@node_id}' && p.portType === '#{@port}') ? 'error' : ''"
+      }
       data-node-id={@node_id}
       data-port-type={@port}
       x-on:mousedown.stop={"startConnection('#{@node_id}', '#{@port}')"}
@@ -43,22 +43,27 @@ defmodule OttrWeb.Dashboard.Playground.BurstNode do
     <div
       id={@id}
       x-data="{ isActive: false }"
-      x-on:mousedown={"startDrag('#{@node.id}', $event)"}
+      x-on:mousedown.stop={"startDrag('#{@node.id}', $event)"}
       x-on:mouseup.window="stopDrag"
       x-on:mousemove.window="onDrag($event)"
       x-bind:style={"{ transform: `translate(${getNodePosition('" <> @node.id <> "').x}px, ${getNodePosition('" <> @node.id <> "').y}px)` }"}
-      class={"workflow-node absolute w-64 rounded-xl shadow-sm p-4 text-sm hover:shadow-md transition-shadow duration-200 group cursor-grab select-none border #{@type_class}"}
+      class={"workflow-node absolute w-64 rounded-xl shadow-sm p-4 text-sm hover:shadow-md transition-shadow duration-200 group select-none border #{@type_class}"}
       x-ref="burst_node"
       @close-node-sheet.window="isActive = false"
       @dblclick={"
-    isActive = true;
-    $dispatch('open-node-sheet', {
-    nodeId: '#{@node.id}',
-    nodeType: '#{@node.category}',
-    nodeData: { url: 'https://api.example.com', method: 'GET' }
-    });
+      isActive = true;
+      $dispatch('open-node-sheet', {
+        nodeId: '#{@node.id}',
+        nodeType: '#{@node.category}',
+        nodeData: { url: 'https://api.example.com', method: 'GET' }
+      });
     "}
       x-bind:class="isActive ? 'bg-emerald-100 border-emerald-400 ring-2 ring-emerald-500 shadow-md scale-[1.02]' : ''"
+      style="cursor: grab;"
+      x-bind:style="{
+      transform: `translate(${getNodePosition('#{@node.id}').x}px, ${getNodePosition('#{@node.id}').y}px)`,
+      cursor: dragging && activeNode?.id === '#{@node.id}' ? 'grabbing' : 'grab'
+    }"
     >
       <div class="flex justify-between items-center mb-2">
         <div class="flex items-center gap-2 font-medium text-gray-800">
